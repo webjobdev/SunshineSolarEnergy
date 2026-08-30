@@ -1,15 +1,12 @@
 
 sunshine solar energy
 
-sunshinesolar.energy
+domain name: sunshinesolar.energy
 
 Project name : SunshineSolarEnergy
 Db Name : sunshine_solar_energy
 
-
-
-
-
-Solar Brand
-
+Composer version 2.9.5 2026-01-29 11:40:53
+PHP version 8.2.12 (C:\xampp_8_2_12\php\php.exe)
+Laravel Framework 12.63.0
 
