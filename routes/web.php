@@ -8,11 +8,13 @@ use App\Http\Controllers\Admin\BlogTagController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\WebsiteConfigController;
+use App\Http\Controllers\Frontend\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    dd('home page');
-});
+
+// Route::get('/', function () {
+//     dd('home page');
+// });
 Route::middleware('guest')->group(function () {
     Route::get('admin/login', [AuthController::class, 'login'])->name('admin.login');
     Route::post('admin/login', [AuthController::class, 'authenticate'])->name('admin.login.authenticate');
@@ -95,3 +97,58 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::post('/cleanup-images', [WebsiteConfigController::class, 'cleanupImages'])->name('admin.config.cleanup-images');
     });
 });
+
+// ============================= Frontend ============================================
+
+// Home Routes
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/services', [HomeController::class, 'services'])->name('services');
+Route::get('/service-single/{slug?}', [HomeController::class, 'serviceSingle'])->name('service.single');
+Route::get('/products', [HomeController::class, 'products'])->name('products');
+Route::get('/product-single/{slug?}', [HomeController::class, 'productSingle'])->name('product.single');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::post('/contact/submit', [HomeController::class, 'submitContact'])->name('contact.submit');
+
+Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('legal.privacy');
+Route::get('/terms-conditions', [HomeController::class, 'termsConditions'])->name('legal.terms');
+Route::get('/disclaimer', [HomeController::class, 'disclaimer'])->name('legal.disclaimer');
+Route::get('/refund-policy', [HomeController::class, 'refundPolicy'])->name('legal.refund');
+Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
+
+// Route::get('/home-video', [HomeController::class, 'video'])->name('home.video');
+// Route::get('/home-slider', [HomeController::class, 'slider'])->name('home.slider');
+// Route::get('/home-2', [HomeController::class, 'index2'])->name('home2');
+// Route::get('/home-2-video', [HomeController::class, 'video2'])->name('home2.video');
+// Route::get('/home-2-slider', [HomeController::class, 'slider2'])->name('home2.slider');
+// Route::get('/home-3', [HomeController::class, 'index3'])->name('home3');
+// Route::get('/home-3-video', [HomeController::class, 'video3'])->name('home3.video');
+// Route::get('/home-3-slider', [HomeController::class, 'slider3'])->name('home3.slider');
+
+// About
+// Route::get('/about', [HomeController::class, 'about'])->name('about');
+
+// Services/
+// Route::get('/services', [HomeController::class, 'services'])->name('services');
+// Route::get('/service-single', [HomeController::class, 'serviceSingle'])->name('service.single');
+
+// Projects
+// Route::get('/projects', [HomeController::class, 'projects'])->name('projects');
+// Route::get('/project-single', [HomeController::class, 'projectSingle'])->name('project.single');
+
+// Blog
+// Route::get('/blog', [HomeController::class, 'blog'])->name('blog');
+// Route::get('/blog-single', [HomeController::class, 'blogSingle'])->name('blog.single');
+
+// Team
+// Route::get('/team', [HomeController::class, 'team'])->name('team');
+// Route::get('/team-single', [HomeController::class, 'teamSingle'])->name('team.single');
+
+// Other Pages
+// Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
+// Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+// Route::get('/book-now', [HomeController::class, 'bookNow'])->name('book.now');
+// Route::get('/404', [HomeController::class, 'error404'])->name('404');
+
+// Calculator
+// Route::post('/calculate', [CalculatorController::class, 'calculate'])->name('calculator.calculate');
