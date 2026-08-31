@@ -1,4 +1,5 @@
 <!-- Header Start -->
+{{-- SunshineSolarEnergy\resources\views\frontend\partials\header.blade.php --}}
 <header class="main-header">
     <div class="header-sticky">
         <nav class="navbar navbar-expand-lg">
@@ -11,20 +12,6 @@
                 <!-- Main Menu -->
                 <div class="collapse navbar-collapse main-menu">
                     <ul class="navbar-nav mr-auto" id="menu">
-                        {{-- <li class="nav-item submenu">
-                            <a class="nav-link" href="#">Home</a>
-                            <ul>
-                                <li class="nav-item"><a class="nav-link" href="#">Home 01 - Image</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Home 01 - Video</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Home 01 - Slider</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Home 02 - Image</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Home 02 - Video</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Home 02 - Slider</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Home 03 - Image</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Home 03 - Video</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Home 03 - Slider</a></li>
-                            </ul>
-                        </li> --}}
                         <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">About us</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('services') }}">Services</a></li>
@@ -44,7 +31,6 @@
                                 <li class="nav-item"><a class="nav-link" href="#">404</a></li>
                             </ul>
                         </li> --}}
-                        {{-- <li class="nav-item"><a class="nav-link" href="#">Contact</a></li> --}}
                         <li class="nav-item highlighted-menu"><a class="nav-link" href="{{ route('contact') }}">Book Now</a></li>
                     </ul>
                 </div>

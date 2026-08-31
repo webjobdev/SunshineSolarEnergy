@@ -333,146 +333,146 @@
     }
 
 	/* Text Effect Animation */
-	if ($('.text-anime').length) {
-		const animatedElements = document.querySelectorAll(".text-anime");
+	// if ($('.text-anime').length) {
+	// 	const animatedElements = document.querySelectorAll(".text-anime");
 
-		animatedElements.forEach((element) => {
-		let staggerAmount = 0.05;
-		let translateXValue = 20;
-		let translateYValue = false;
-		let onScrollValue = 1;
-		let delayValue = 0.5;
-		let easeType = "power2.out";
+	// 	animatedElements.forEach((element) => {
+	// 	let staggerAmount = 0.05;
+	// 	let translateXValue = 20;
+	// 	let translateYValue = false;
+	// 	let onScrollValue = 1;
+	// 	let delayValue = 0.5;
+	// 	let easeType = "power2.out";
 
-		if (element.getAttribute("data-stagger")) {
-			staggerAmount = element.getAttribute("data-stagger");
-		}
+	// 	if (element.getAttribute("data-stagger")) {
+	// 		staggerAmount = element.getAttribute("data-stagger");
+	// 	}
 
-		if (element.getAttribute("data-translateX")) {
-			translateXValue = element.getAttribute("data-translateX");
-		}
+	// 	if (element.getAttribute("data-translateX")) {
+	// 		translateXValue = element.getAttribute("data-translateX");
+	// 	}
 
-		if (element.getAttribute("data-translateY")) {
-			translateYValue = element.getAttribute("data-translateY");
-		}
+	// 	if (element.getAttribute("data-translateY")) {
+	// 		translateYValue = element.getAttribute("data-translateY");
+	// 	}
 
-		if (element.getAttribute("data-on-scroll")) {
-			onScrollValue = element.getAttribute("data-on-scroll");
-		}
+	// 	if (element.getAttribute("data-on-scroll")) {
+	// 		onScrollValue = element.getAttribute("data-on-scroll");
+	// 	}
 
-		if (element.getAttribute("data-delay")) {
-			delayValue = element.getAttribute("data-delay");
-		}
+	// 	if (element.getAttribute("data-delay")) {
+	// 		delayValue = element.getAttribute("data-delay");
+	// 	}
 
-		if (element.getAttribute("data-ease")) {
-			easeType = element.getAttribute("data-ease");
-		}
+	// 	if (element.getAttribute("data-ease")) {
+	// 		easeType = element.getAttribute("data-ease");
+	// 	}
 
-		if (onScrollValue == 1) {
-			if (translateXValue > 0 && !translateYValue) {
-			let splitText = new SplitType(element, { type: "chars, words" });
-				gsap.from(splitText.chars, {
-					duration: 1,
-					delay: delayValue,
-					x: translateXValue,
-					autoAlpha: 0,
-					stagger: staggerAmount,
-					ease: easeType,
-					scrollTrigger: { trigger: element, start: "top 85%"},
-				});
-			}
+	// 	if (onScrollValue == 1) {
+	// 		if (translateXValue > 0 && !translateYValue) {
+	// 		let splitText = new SplitType(element, { type: "chars, words" });
+	// 			gsap.from(splitText.chars, {
+	// 				duration: 1,
+	// 				delay: delayValue,
+	// 				x: translateXValue,
+	// 				autoAlpha: 0,
+	// 				stagger: staggerAmount,
+	// 				ease: easeType,
+	// 				scrollTrigger: { trigger: element, start: "top 85%"},
+	// 			});
+	// 		}
 
-			if (translateYValue > 0 && !translateXValue) {
-			let splitText = new SplitType(element, { type: "chars, words" });
-			gsap.from(splitText.chars, {
-				duration: 1,
-				delay: delayValue,
-				y: translateYValue,
-				autoAlpha: 0,
-				ease: easeType,
-				stagger: staggerAmount,
-				scrollTrigger: { trigger: element, start: "top 85%" },
-			});
-			}
+	// 		if (translateYValue > 0 && !translateXValue) {
+	// 		let splitText = new SplitType(element, { type: "chars, words" });
+	// 		gsap.from(splitText.chars, {
+	// 			duration: 1,
+	// 			delay: delayValue,
+	// 			y: translateYValue,
+	// 			autoAlpha: 0,
+	// 			ease: easeType,
+	// 			stagger: staggerAmount,
+	// 			scrollTrigger: { trigger: element, start: "top 85%" },
+	// 		});
+	// 		}
 
-			if (translateXValue && translateYValue) {
-			let splitText = new SplitType(element, { type: "chars, words" });
-			gsap.from(splitText.chars, {
-				duration: 3,
-				delay: delayValue,
-				y: translateYValue,
-				x: translateXValue,
-				autoAlpha: 0,
-				ease: easeType,
-				stagger: staggerAmount,
-				scrollTrigger: { trigger: element, start: "top 85%" },
-			});
-			}
+	// 		if (translateXValue && translateYValue) {
+	// 		let splitText = new SplitType(element, { type: "chars, words" });
+	// 		gsap.from(splitText.chars, {
+	// 			duration: 3,
+	// 			delay: delayValue,
+	// 			y: translateYValue,
+	// 			x: translateXValue,
+	// 			autoAlpha: 0,
+	// 			ease: easeType,
+	// 			stagger: staggerAmount,
+	// 			scrollTrigger: { trigger: element, start: "top 85%" },
+	// 		});
+	// 		}
 
-			if (!translateXValue && !translateYValue) {
-				let splitText = new SplitType(element, { type: "chars, words" });
-				gsap.from(splitText.chars, {
-					duration: 1,
-					delay: delayValue,
-					x: 50,
-					autoAlpha: 0,
-					stagger: staggerAmount,
-					ease: easeType,
-					scrollTrigger: { trigger: element, start: "top 85%" },
-				});
-			}
-			} else {
-				if (translateXValue > 0 && !translateYValue) {
-				let splitText = new SplitType(element, { type: "chars, words" });
-				gsap.from(splitText.chars, {
-					duration: 1,
-					delay: delayValue,
-					x: translateXValue,
-					ease: easeType,
-					autoAlpha: 0,
-					stagger: staggerAmount,
-				});
-				}
+	// 		if (!translateXValue && !translateYValue) {
+	// 			let splitText = new SplitType(element, { type: "chars, words" });
+	// 			gsap.from(splitText.chars, {
+	// 				duration: 1,
+	// 				delay: delayValue,
+	// 				x: 50,
+	// 				autoAlpha: 0,
+	// 				stagger: staggerAmount,
+	// 				ease: easeType,
+	// 				scrollTrigger: { trigger: element, start: "top 85%" },
+	// 			});
+	// 		}
+	// 		} else {
+	// 			if (translateXValue > 0 && !translateYValue) {
+	// 			let splitText = new SplitType(element, { type: "chars, words" });
+	// 			gsap.from(splitText.chars, {
+	// 				duration: 1,
+	// 				delay: delayValue,
+	// 				x: translateXValue,
+	// 				ease: easeType,
+	// 				autoAlpha: 0,
+	// 				stagger: staggerAmount,
+	// 			});
+	// 			}
 
-				if (translateYValue > 0 && !translateXValue) {
-				let splitText = new SplitType(element, { type: "chars, words" });
-				gsap.from(splitText.chars, {
-					duration: 1,
-					delay: delayValue,
-					y: translateYValue,
-					autoAlpha: 0,
-					ease: easeType,
-					stagger: staggerAmount,
-				});
-				}
+	// 			if (translateYValue > 0 && !translateXValue) {
+	// 			let splitText = new SplitType(element, { type: "chars, words" });
+	// 			gsap.from(splitText.chars, {
+	// 				duration: 1,
+	// 				delay: delayValue,
+	// 				y: translateYValue,
+	// 				autoAlpha: 0,
+	// 				ease: easeType,
+	// 				stagger: staggerAmount,
+	// 			});
+	// 			}
 
-				if (translateXValue && translateYValue) {
-				let splitText = new SplitType(element, { type: "chars, words" });
-				gsap.from(splitText.chars, {
-					duration: 1,
-					delay: delayValue,
-					y: translateYValue,
-					x: translateXValue,
-					ease: easeType,
-					autoAlpha: 0,
-					stagger: staggerAmount,
-				});
-				}
+	// 			if (translateXValue && translateYValue) {
+	// 			let splitText = new SplitType(element, { type: "chars, words" });
+	// 			gsap.from(splitText.chars, {
+	// 				duration: 1,
+	// 				delay: delayValue,
+	// 				y: translateYValue,
+	// 				x: translateXValue,
+	// 				ease: easeType,
+	// 				autoAlpha: 0,
+	// 				stagger: staggerAmount,
+	// 			});
+	// 			}
 
-				if (!translateXValue && !translateYValue) {
-				let splitText = new SplitType(element, { type: "chars, words" });
-				gsap.from(splitText.chars, {
-					duration: 1,
-					delay: delayValue,
-					ease: easeType,
-					x: 50,
-					autoAlpha: 0,
-					stagger: staggerAmount,
-				});
-				}
-			}
-		});
-	}
+	// 			if (!translateXValue && !translateYValue) {
+	// 			let splitText = new SplitType(element, { type: "chars, words" });
+	// 			gsap.from(splitText.chars, {
+	// 				duration: 1,
+	// 				delay: delayValue,
+	// 				ease: easeType,
+	// 				x: 50,
+	// 				autoAlpha: 0,
+	// 				stagger: staggerAmount,
+	// 			});
+	// 			}
+	// 		}
+	// 	});
+	// }
 
 	/* Parallaxie js */
 	var $parallaxie = $('.parallaxie');

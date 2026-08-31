@@ -6578,3 +6578,18 @@ footer.main-footer{
 		padding: 40px 0 10px;
 	}
 }
+
+
+/* custom */
+.topbar {
+    position: relative;
+    z-index: 1000;
+}
+.lang-switcher {
+    position: relative;
+    z-index: 1001;
+}
+.lang-switcher-menu {
+    position: absolute;
+    z-index: 1002;
+}

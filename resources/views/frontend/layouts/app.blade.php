@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+{{-- SunshineSolarEnergy\resources\views\frontend\layouts\app.blade.php --}}
 <head>
     <!-- Meta -->
     <meta charset="utf-8">
@@ -8,21 +9,23 @@
     <meta name="description" content="@yield('meta_description', 'Solor - Solar & Renewable Energy HTML Template')">
     <meta name="keywords" content="@yield('meta_keywords', 'solar, renewable, energy')">
     <meta name="author" content="Awaiken">
-    
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <!-- Page Title -->
     <title>@yield('title', 'Solor - Solar & Renewable Energy')</title>
-    
+
     <!-- Favicon Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('frontend/images/favicon.png') }}">
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Rubik:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Rubik:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <!-- Styles -->
     <link href="{{ asset('frontend/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('frontend/css/slicknav.min.css') }}" rel="stylesheet">
@@ -31,35 +34,37 @@
     <link href="{{ asset('frontend/css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('frontend/css/magnific-popup.css') }}" rel="stylesheet">
     <link href="{{ asset('frontend/css/custom.css') }}" rel="stylesheet">
-    
+
     @stack('styles')
+    @include('frontend.partials.google-css')
+
 </head>
 
 <body class="tt-magic-cursor">
-    
+
     <!-- Preloader -->
     @include('frontend.partials.preloader')
-    
+
     <!-- Magic Cursor -->
     @include('frontend.partials.magic-cursor')
-    
+
     <!-- Topbar -->
     @include('frontend.partials.topbar')
-    
+
     <!-- Header -->
     @include('frontend.partials.header')
-    
+
     <!-- Main Content -->
     <main>
         @yield('content')
     </main>
-    
+
     <!-- Footer Ticker -->
     @include('frontend.partials.footer-ticker')
-    
+
     <!-- Footer -->
     @include('frontend.partials.footer')
-    
+
     <!-- Scripts -->
     <script src="{{ asset('frontend/js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('frontend/js/bootstrap.min.js') }}"></script>
@@ -77,7 +82,9 @@
     <script src="{{ asset('frontend/js/ScrollTrigger.min.js') }}"></script>
     <script src="{{ asset('frontend/js/wow.js') }}"></script>
     <script src="{{ asset('frontend/js/function.js') }}"></script>
-    
+
+    @include('frontend.partials.google-js')
     @stack('scripts')
 </body>
+
 </html>
