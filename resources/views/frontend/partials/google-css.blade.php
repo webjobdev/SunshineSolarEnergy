@@ -47,7 +47,7 @@
         display: none;
         position: absolute;
         top: 100%;
-        right: 0;
+        right: -12px;
         background: #fff;
         min-width: 130px;
         list-style: none;

@@ -17,13 +17,14 @@
                     <!-- Custom Language Switcher (drives Google Translate) -->
                     <div class="lang-switcher" id="langSwitcher">
                         <button type="button" class="lang-switcher-toggle" id="langSwitcherToggle">
+                            <i class="fa-solid fa-language ms-2 fs-6"></i>
                             <span id="langSwitcherLabel">ગુજરાતી</span>
-                            <i class="fa-solid fa-chevron-down"></i>
+                            <i class="fa-solid fa-caret-down ms-2 mb-2 fs-6"></i>
                         </button>
                         <ul class="lang-switcher-menu" id="langSwitcherMenu">
-                            <li data-lang="gu" data-label="ગુજરાતી" class="active">ગુજરાતી</li>
-                            <li data-lang="en" data-label="English">English</li>
-                            <li data-lang="hi" data-label="हिंदी">हिंदी</li>
+                            <li data-lang="gu" data-label="ગુજરાતી" class="active"><i class="fa-solid fa-language text-warning me-2"></i>🇮🇳 ગુજરાતી</li>
+                            <li data-lang="hi" data-label="हिंदी"><i class="fa-solid fa-language text-warning me-2"></i>हिंदी</li>
+                            <li data-lang="en" data-label="English"><i class="fa-solid fa-earth-americas text-warning me-2"></i>English</li>
                         </ul>
                     </div>
 

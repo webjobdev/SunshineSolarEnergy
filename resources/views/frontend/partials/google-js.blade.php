@@ -1,4 +1,11 @@
 <script type="text/javascript">
+ // Set default language cookie to Gujarati on first visit
+    (function () {
+        if (document.cookie.indexOf('googtrans=') === -1) {
+            document.cookie = "googtrans=/en/gu; path=/";
+        }
+    })();
+
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
             pageLanguage: 'en',
@@ -16,6 +23,17 @@
                 });
             document.body.style.top = '0px';
         }, 300);
+
+        window.addEventListener('load', function () {
+        setTimeout(function () {
+            var combo = document.querySelector('.goog-te-combo');
+            if (combo) {
+                // Re-trigger translation on the currently selected language
+                var evt = new Event('change');
+                combo.dispatchEvent(evt);
+            }
+        }, 1200); // wait for wow.js / splitType to finish splitting text
+    })
     }
 </script>
 

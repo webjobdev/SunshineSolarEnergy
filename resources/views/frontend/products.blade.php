@@ -5,7 +5,7 @@
 @section('meta_keywords', $productsPage->meta_keywords ?? 'solar products, solar panels, inverters, batteries, renewable energy')
 
 @push('styles')
-    @include('frontend.sections.products-css')
+    {{-- @include('frontend.sections.products-css') --}}
 @endpush
 
 @section('content')
