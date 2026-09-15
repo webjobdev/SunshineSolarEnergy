@@ -5,11 +5,21 @@ use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogCommentController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogTagController;
+use App\Http\Controllers\Admin\CustomerReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\ProductBrandController;
+use App\Http\Controllers\Admin\ProductCategoryController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\WebsiteConfigController;
 use App\Http\Controllers\Frontend\HomeController;
 use Illuminate\Support\Facades\Route;
+
+
+
+
+
 
 
 // Route::get('/', function () {
@@ -96,6 +106,60 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/images/{group}', [WebsiteConfigController::class, 'getImages'])->name('admin.config.images');
         Route::post('/cleanup-images', [WebsiteConfigController::class, 'cleanupImages'])->name('admin.config.cleanup-images');
     });
+
+    // Product Brands Routes
+    Route::prefix('product/brand')->group(function () {
+        Route::get('/', [ProductBrandController::class, 'index'])->name('admin.product.brand');
+        Route::get('/create', [ProductBrandController::class, 'create'])->name('admin.product.brand.create');
+        Route::post('/', [ProductBrandController::class, 'store'])->name('admin.product.brand.store');
+        Route::get('/edit/{id}', [ProductBrandController::class, 'edit'])->name('admin.product.brand.edit');
+        Route::put('/update/{id}', [ProductBrandController::class, 'update'])->name('admin.product.brand.update');
+        Route::delete('/delete/{id}', [ProductBrandController::class, 'destroy'])->name('admin.product.brand.delete');
+        Route::post('/generate-slug', [ProductBrandController::class, 'generateSlug'])->name('admin.product.brand.generate-slug');
+    });
+
+    // Product Categories Routes
+    Route::prefix('product/category')->group(function () {
+        Route::get('/', [ProductCategoryController::class, 'index'])->name('admin.product.category');
+        Route::get('/create', [ProductCategoryController::class, 'create'])->name('admin.product.category.create');
+        Route::post('/', [ProductCategoryController::class, 'store'])->name('admin.product.category.store');
+        Route::get('/edit/{id}', [ProductCategoryController::class, 'edit'])->name('admin.product.category.edit');
+        Route::put('/update/{id}', [ProductCategoryController::class, 'update'])->name('admin.product.category.update');
+        Route::delete('/delete/{id}', [ProductCategoryController::class, 'destroy'])->name('admin.product.category.delete');
+        Route::post('/generate-slug', [ProductCategoryController::class, 'generateSlug'])->name('admin.product.category.generate-slug');
+    });
+
+    // Products Routes
+    Route::prefix('product')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('admin.product');
+        Route::get('/create', [ProductController::class, 'create'])->name('admin.product.create');
+        Route::post('/', [ProductController::class, 'store'])->name('admin.product.store');
+        Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('admin.product.edit');
+        Route::put('/update/{id}', [ProductController::class, 'update'])->name('admin.product.update');
+        Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->name('admin.product.delete');
+        Route::post('/generate-slug', [ProductController::class, 'generateSlug'])->name('admin.product.generate-slug');
+    });
+
+    // Services Routes
+    Route::prefix('service')->group(function () {
+        Route::get('/', [ServiceController::class, 'index'])->name('admin.service');
+        Route::get('/create', [ServiceController::class, 'create'])->name('admin.service.create');
+        Route::post('/', [ServiceController::class, 'store'])->name('admin.service.store');
+        Route::get('/edit/{id}', [ServiceController::class, 'edit'])->name('admin.service.edit');
+        Route::put('/update/{id}', [ServiceController::class, 'update'])->name('admin.service.update');
+        Route::delete('/delete/{id}', [ServiceController::class, 'destroy'])->name('admin.service.delete');
+        Route::post('/generate-slug', [ServiceController::class, 'generateSlug'])->name('admin.service.generate-slug');
+    });
+
+    // Customer Reviews Routes
+    Route::prefix('customer-review')->group(function () {
+        Route::get('/', [CustomerReviewController::class, 'index'])->name('admin.customer-review');
+        Route::get('/create', [CustomerReviewController::class, 'create'])->name('admin.customer-review.create');
+        Route::post('/', [CustomerReviewController::class, 'store'])->name('admin.customer-review.store');
+        Route::get('/edit/{id}', [CustomerReviewController::class, 'edit'])->name('admin.customer-review.edit');
+        Route::put('/update/{id}', [CustomerReviewController::class, 'update'])->name('admin.customer-review.update');
+        Route::delete('/delete/{id}', [CustomerReviewController::class, 'destroy'])->name('admin.customer-review.delete');
+    });
 });
 
 // ============================= Frontend ============================================
@@ -152,3 +216,23 @@ Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
 
 // Calculator
 // Route::post('/calculate', [CalculatorController::class, 'calculate'])->name('calculator.calculate');
+// ---------------
+// Products Routes
+// Route::prefix('products')->group(function () {
+//     Route::get('/', [ProductController::class, 'index']);
+//     Route::get('/new', [ProductController::class, 'newProducts']);
+//     Route::get('/trending', [ProductController::class, 'trendingProducts']);
+//     Route::get('/home', [ProductController::class, 'homeProducts']);
+//     Route::get('/brand/{slug}', [ProductController::class, 'byBrand']);
+//     Route::get('/category/{slug}', [ProductController::class, 'byCategory']);
+//     Route::get('/{slug}', [ProductController::class, 'show']);
+// });
+
+// // Services Routes
+// Route::prefix('services')->group(function () {
+//     Route::get('/', [ServiceController::class, 'index']);
+//     Route::get('/{slug}', [ServiceController::class, 'show']);
+// });
+
+// // Customer Reviews Routes
+// Route::get('/customer-reviews', [CustomerReviewController::class, 'index']);

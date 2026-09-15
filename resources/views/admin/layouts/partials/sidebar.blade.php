@@ -3,7 +3,9 @@
     <div class="sidebar-header">
         <a class="brand-mark" href="{{ route('admin.dashboard') }}" aria-label="Admin dashboard">
             {{-- <span class="brand-icon"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></span> --}}
-            <img style="height: 50px;" src="{{ configImage('web_logo') ?? asset('admin-theme/assets/images/brand/logo/logo-icon.svg') }}" alt="Logo" class="img-fluid">
+            <img style="height: 50px;"
+                src="{{ configImage('web_logo') ?? asset('admin-theme/assets/images/brand/logo/logo-icon.svg') }}"
+                alt="Logo" class="img-fluid">
             <span class="brand-copy">
                 <span class="brand-title">{{ configSetting('web_name') }}</span>
                 <span class="brand-subtitle">Welcome,{{ auth()->user()->name }}</span>
@@ -27,9 +29,70 @@
             <span class="nav-text">Pages</span>
         </a>
 
+        {{-- Products Dropdown --}}
+        <div class="nav-item nav-dropdown {{ request()->routeIs('admin.product*') ? 'open' : '' }}">
+            <a class="nav-link nav-dropdown-toggle {{ request()->routeIs('admin.product*') ? 'active' : '' }}"
+                href="#productMenu" data-bs-toggle="collapse" role="button"
+                aria-expanded="{{ request()->routeIs('admin.product*') ? 'true' : 'false' }}"
+                aria-controls="productMenu">
+                <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
+                <span class="nav-text">Products</span>
+                <span class="nav-dropdown-icon">
+                    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                </span>
+            </a>
+            <div class="collapse {{ request()->routeIs('admin.product*') ? 'show' : '' }}" id="productMenu">
+                <ul class="nav-submenu">
+                    <li>
+                        <a class="nav-link {{ request()->routeIs('admin.product') ? 'active' : '' }}"
+                            href="{{ route('admin.product') }}">
+                            <span class="nav-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
+                            <span class="nav-text">All Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link {{ request()->routeIs('admin.product.create') ? 'active' : '' }}"
+                            href="{{ route('admin.product.create') }}">
+                            <span class="nav-icon"><i class="bi bi-plus-circle" aria-hidden="true"></i></span>
+                            <span class="nav-text">Add Product</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link {{ request()->routeIs('admin.product.brand*') ? 'active' : '' }}"
+                            href="{{ route('admin.product.brand') }}">
+                            <span class="nav-icon"><i class="bi bi-award" aria-hidden="true"></i></span>
+                            <span class="nav-text">Brands</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link {{ request()->routeIs('admin.product.category*') ? 'active' : '' }}"
+                            href="{{ route('admin.product.category') }}">
+                            <span class="nav-icon"><i class="bi bi-tags" aria-hidden="true"></i></span>
+                            <span class="nav-text">Categories</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        {{-- Services --}}
+        <a class="nav-link {{ request()->routeIs('admin.service*') ? 'active' : '' }}"
+            href="{{ route('admin.service') }}" aria-current="{{ request()->routeIs('admin.service*') ? 'page' : '' }}">
+            <span class="nav-icon"><i class="bi bi-gear-wide-connected" aria-hidden="true"></i></span>
+            <span class="nav-text">Services</span>
+        </a>
+
+        {{-- Customer Reviews --}}
+        <a class="nav-link {{ request()->routeIs('admin.customer-review*') ? 'active' : '' }}"
+            href="{{ route('admin.customer-review') }}"
+            aria-current="{{ request()->routeIs('admin.customer-review*') ? 'page' : '' }}">
+            <span class="nav-icon"><i class="bi bi-star" aria-hidden="true"></i></span>
+            <span class="nav-text">Customer Reviews</span>
+        </a>
+
         <!-- Blog -->
-        {{-- <a class="nav-link {{ request()->routeIs('admin.blog*') ? 'active' : '' }}" href="{{ route('admin.blog') }}"
-            aria-current="{{ request()->routeIs('admin.blog*') ? 'page' : '' }}">
+        {{-- <a class="nav-link {{ request()->routeIs('admin.blog*') ? 'active' : '' }}"
+            href="{{ route('admin.blog') }}" aria-current="{{ request()->routeIs('admin.blog*') ? 'page' : '' }}">
             <span class="nav-icon">
                 <i class="bi bi-journal-text"></i>
             </span>
@@ -37,12 +100,9 @@
         </a> --}}
         <!-- Blog with Submenu -->
         <div class="nav-item nav-dropdown {{ request()->routeIs('admin.blog*') ? 'open' : '' }}">
-            <a class="nav-link nav-dropdown-toggle {{ request()->routeIs('admin.blog*') ? 'active' : '' }}" 
-               href="#blogMenu" 
-               data-bs-toggle="collapse" 
-               role="button" 
-               aria-expanded="{{ request()->routeIs('admin.blog*') ? 'true' : 'false' }}"
-               aria-controls="blogMenu">
+            <a class="nav-link nav-dropdown-toggle {{ request()->routeIs('admin.blog*') ? 'active' : '' }}"
+                href="#blogMenu" data-bs-toggle="collapse" role="button"
+                aria-expanded="{{ request()->routeIs('admin.blog*') ? 'true' : 'false' }}" aria-controls="blogMenu">
                 <span class="nav-icon"><i class="bi bi-journal-text" aria-hidden="true"></i></span>
                 <span class="nav-text">Blog</span>
                 <span class="nav-dropdown-icon">
@@ -53,40 +113,40 @@
                 <ul class="nav-submenu">
                     <!-- Blog Posts -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.blog') ? 'active' : '' }}" 
-                           href="{{ route('admin.blog') }}">
+                        <a class="nav-link {{ request()->routeIs('admin.blog') ? 'active' : '' }}"
+                            href="{{ route('admin.blog') }}">
                             <span class="nav-icon"><i class="bi bi-journal-text" aria-hidden="true"></i></span>
                             <span class="nav-text">All Posts</span>
                         </a>
                     </li>
                     <!-- Create Post -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.blog.create') ? 'active' : '' }}" 
-                           href="{{ route('admin.blog.create') }}">
+                        <a class="nav-link {{ request()->routeIs('admin.blog.create') ? 'active' : '' }}"
+                            href="{{ route('admin.blog.create') }}">
                             <span class="nav-icon"><i class="bi bi-plus-circle" aria-hidden="true"></i></span>
                             <span class="nav-text">Add New Post</span>
                         </a>
                     </li>
                     <!-- Categories -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.blog.category*') ? 'active' : '' }}" 
-                           href="{{ route('admin.blog.category') }}">
+                        <a class="nav-link {{ request()->routeIs('admin.blog.category*') ? 'active' : '' }}"
+                            href="{{ route('admin.blog.category') }}">
                             <span class="nav-icon"><i class="bi bi-tags" aria-hidden="true"></i></span>
                             <span class="nav-text">Categories</span>
                         </a>
                     </li>
                     <!-- Tags -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.blog.tag*') ? 'active' : '' }}" 
-                           href="{{ route('admin.blog.tag') }}">
+                        <a class="nav-link {{ request()->routeIs('admin.blog.tag*') ? 'active' : '' }}"
+                            href="{{ route('admin.blog.tag') }}">
                             <span class="nav-icon"><i class="bi bi-tag" aria-hidden="true"></i></span>
                             <span class="nav-text">Tags</span>
                         </a>
                     </li>
                     <!-- Comments -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.blog.comment*') ? 'active' : '' }}" 
-                           href="{{ route('admin.blog.comment') }}">
+                        <a class="nav-link {{ request()->routeIs('admin.blog.comment*') ? 'active' : '' }}"
+                            href="{{ route('admin.blog.comment') }}">
                             <span class="nav-icon"><i class="bi bi-chat-dots" aria-hidden="true"></i></span>
                             <span class="nav-text">Comments</span>
                             @php
@@ -101,14 +161,11 @@
             </div>
         </div>
 
-         <!-- Website Configuration with Submenu -->
+        <!-- Website Configuration with Submenu -->
         <div class="nav-item nav-dropdown {{ request()->routeIs('admin.config*') ? 'open' : '' }}">
-            <a class="nav-link nav-dropdown-toggle {{ request()->routeIs('admin.config*') ? 'active' : '' }}" 
-               href="#configMenu" 
-               data-bs-toggle="collapse" 
-               role="button" 
-               aria-expanded="{{ request()->routeIs('admin.config*') ? 'true' : 'false' }}"
-               aria-controls="configMenu">
+            <a class="nav-link nav-dropdown-toggle {{ request()->routeIs('admin.config*') ? 'active' : '' }}"
+                href="#configMenu" data-bs-toggle="collapse" role="button"
+                aria-expanded="{{ request()->routeIs('admin.config*') ? 'true' : 'false' }}" aria-controls="configMenu">
                 <span class="nav-icon"><i class="bi bi-gear-wide-connected" aria-hidden="true"></i></span>
                 <span class="nav-text">Website Config</span>
                 <span class="nav-dropdown-icon">
@@ -119,64 +176,64 @@
                 <ul class="nav-submenu">
                     <!-- General Settings -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'general' ? 'active' : '' }}" 
-                           href="{{ route('admin.config', ['group' => 'general']) }}">
+                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'general' ? 'active' : '' }}"
+                            href="{{ route('admin.config', ['group' => 'general']) }}">
                             <span class="nav-icon"><i class="bi bi-sliders" aria-hidden="true"></i></span>
                             <span class="nav-text">General Settings</span>
                         </a>
                     </li>
                     <!-- Contact Information -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'contact' ? 'active' : '' }}" 
-                           href="{{ route('admin.config', ['group' => 'contact']) }}">
+                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'contact' ? 'active' : '' }}"
+                            href="{{ route('admin.config', ['group' => 'contact']) }}">
                             <span class="nav-icon"><i class="bi bi-envelope" aria-hidden="true"></i></span>
                             <span class="nav-text">Contact Info</span>
                         </a>
                     </li>
                     <!-- Social Media -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'social' ? 'active' : '' }}" 
-                           href="{{ route('admin.config', ['group' => 'social']) }}">
+                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'social' ? 'active' : '' }}"
+                            href="{{ route('admin.config', ['group' => 'social']) }}">
                             <span class="nav-icon"><i class="bi bi-share" aria-hidden="true"></i></span>
                             <span class="nav-text">Social Media</span>
                         </a>
                     </li>
                     <!-- SEO Settings -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'seo' ? 'active' : '' }}" 
-                           href="{{ route('admin.config', ['group' => 'seo']) }}">
+                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'seo' ? 'active' : '' }}"
+                            href="{{ route('admin.config', ['group' => 'seo']) }}">
                             <span class="nav-icon"><i class="bi bi-search" aria-hidden="true"></i></span>
                             <span class="nav-text">SEO Settings</span>
                         </a>
                     </li>
                     <!-- Header Settings -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'header' ? 'active' : '' }}" 
-                           href="{{ route('admin.config', ['group' => 'header']) }}">
+                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'header' ? 'active' : '' }}"
+                            href="{{ route('admin.config', ['group' => 'header']) }}">
                             <span class="nav-icon"><i class="bi bi-layout-text-window" aria-hidden="true"></i></span>
                             <span class="nav-text">Header Settings</span>
                         </a>
                     </li>
                     <!-- Footer Settings -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'footer' ? 'active' : '' }}" 
-                           href="{{ route('admin.config', ['group' => 'footer']) }}">
+                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'footer' ? 'active' : '' }}"
+                            href="{{ route('admin.config', ['group' => 'footer']) }}">
                             <span class="nav-icon"><i class="bi bi-layout-text-sidebar" aria-hidden="true"></i></span>
                             <span class="nav-text">Footer Settings</span>
                         </a>
                     </li>
                     <!-- System Settings -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'system' ? 'active' : '' }}" 
-                           href="{{ route('admin.config', ['group' => 'system']) }}">
+                        <a class="nav-link {{ request()->routeIs('admin.config') && request()->input('group') == 'system' ? 'active' : '' }}"
+                            href="{{ route('admin.config', ['group' => 'system']) }}">
                             <span class="nav-icon"><i class="bi bi-gear" aria-hidden="true"></i></span>
                             <span class="nav-text">System Settings</span>
                         </a>
                     </li>
                     <!-- Add New Config -->
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.config.create') ? 'active' : '' }}" 
-                           href="{{ route('admin.config.create') }}">
+                        <a class="nav-link {{ request()->routeIs('admin.config.create') ? 'active' : '' }}"
+                            href="{{ route('admin.config.create') }}">
                             <span class="nav-icon"><i class="bi bi-plus-circle" aria-hidden="true"></i></span>
                             <span class="nav-text">Add New Config</span>
                         </a>
@@ -184,6 +241,8 @@
                 </ul>
             </div>
         </div>
+
+
 
 
 
