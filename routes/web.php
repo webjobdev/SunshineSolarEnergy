@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BlogTagController;
 use App\Http\Controllers\Admin\CustomerReviewController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LegalPageController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\ProductCategoryController;
@@ -15,12 +16,6 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\WebsiteConfigController;
 use App\Http\Controllers\Frontend\HomeController;
 use Illuminate\Support\Facades\Route;
-
-
-
-
-
-
 
 // Route::get('/', function () {
 //     dd('home page');
@@ -160,6 +155,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::put('/update/{id}', [CustomerReviewController::class, 'update'])->name('admin.customer-review.update');
         Route::delete('/delete/{id}', [CustomerReviewController::class, 'destroy'])->name('admin.customer-review.delete');
     });
+
+
+    // Legal Pages Routes
+    Route::prefix('legal-page')->group(function () {
+        Route::get('/', [LegalPageController::class, 'index'])->name('admin.legal-page');
+        Route::get('/edit/{type}', [LegalPageController::class, 'edit'])->name('admin.legal-page.edit');
+        Route::put('/update/{type}', [LegalPageController::class, 'update'])->name('admin.legal-page.update');
+    });
 });
 
 // ============================= Frontend ============================================
@@ -236,3 +239,9 @@ Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
 
 // // Customer Reviews Routes
 // Route::get('/customer-reviews', [CustomerReviewController::class, 'index']);
+
+// Legal Pages Routes
+// Route::prefix('legal-pages')->group(function () {
+//     Route::get('/', [LegalPageController::class, 'index']);
+//     Route::get('/{type}', [LegalPageController::class, 'show']);
+// });

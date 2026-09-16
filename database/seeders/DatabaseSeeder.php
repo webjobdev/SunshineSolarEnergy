@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin\LegalPage;
 use App\Models\Admin\Page;
 use App\Models\Admin\WebsiteConfiguration;
 use App\Models\User;
 use Database\Seeders\AdminUserSeeder;
+use Database\Seeders\LegalPageSeeder;
 use Database\Seeders\WebsiteConfigSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -41,6 +43,14 @@ class DatabaseSeeder extends Seeder
             $this->command->info('Website configurations seeded successfully.');
         } else {
             $this->command->info('Website configurations already exist. Skipping WebsiteConfigSeeder.');
+        }
+
+          // Only seed if website configurations table is empty php artisan db:seed --class=LegalPageSeeder
+        if (LegalPage::count() === 0) {
+            $this->call(LegalPageSeeder::class);
+            $this->command->info('Legal pages seeded successfully.');
+        } else {
+            $this->command->info('Legal pages already exist. Skipping LegalPageSeeder.');
         }
 
         $this->command->info('All seeders completed!');

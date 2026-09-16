@@ -82,6 +82,14 @@
             <span class="nav-text">Services</span>
         </a>
 
+        {{-- Legal Pages --}}
+        <a class="nav-link {{ request()->routeIs('admin.legal-page*') ? 'active' : '' }}"
+            href="{{ route('admin.legal-page') }}"
+            aria-current="{{ request()->routeIs('admin.legal-page*') ? 'page' : '' }}">
+            <span class="nav-icon"><i class="bi bi-file-earmark-text" aria-hidden="true"></i></span>
+            <span class="nav-text">Legal Pages</span>
+        </a>
+
         {{-- Customer Reviews --}}
         <a class="nav-link {{ request()->routeIs('admin.customer-review*') ? 'active' : '' }}"
             href="{{ route('admin.customer-review') }}"
@@ -89,6 +97,7 @@
             <span class="nav-icon"><i class="bi bi-star" aria-hidden="true"></i></span>
             <span class="nav-text">Customer Reviews</span>
         </a>
+
 
         <!-- Blog -->
         {{-- <a class="nav-link {{ request()->routeIs('admin.blog*') ? 'active' : '' }}"
