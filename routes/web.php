@@ -173,7 +173,7 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/services', [HomeController::class, 'services'])->name('services');
 Route::get('/service-single/{slug?}', [HomeController::class, 'serviceSingle'])->name('service.single');
 Route::get('/products', [HomeController::class, 'products'])->name('products');
-Route::get('/product-single/{slug?}', [HomeController::class, 'productSingle'])->name('product.single');
+Route::get('/product/{slug}', [HomeController::class, 'productSingle'])->name('product.single');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::post('/contact/submit', [HomeController::class, 'submitContact'])->name('contact.submit');
 

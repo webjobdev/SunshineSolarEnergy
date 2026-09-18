@@ -1,101 +1,185 @@
-<div class="products-sidebar">
-    <!-- Filter Form -->
-    <form action="{{ route('products') }}" method="GET" class="filter-form">
-        <!-- Search Filter -->
-        <div class="filter-widget wow fadeInUp">
-            <h3>Search Products</h3>
+<!-- Products Sidebar Start -->
+<div class="products-sidebar wow fadeInUp">
+    <form id="productsFilterForm" method="GET" action="{{ route('products') }}">
+        @if(request('sort'))
+            <input type="hidden" name="sort" value="{{ request('sort') }}">
+        @endif
+
+        <!-- Search -->
+        <div class="sidebar-widget">
+            <h4 class="widget-title">Search</h4>
             <div class="search-box">
-                <input type="text" name="search" class="form-control" 
-                       placeholder="Search products..." 
+                <input type="text" name="search" class="form-control"
+                       placeholder="Search products..."
                        value="{{ request('search') }}">
-                <button type="submit"><i class="fa-solid fa-search"></i></button>
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </div>
 
-        <!-- Category Filter -->
-        <div class="filter-widget wow fadeInUp" data-wow-delay="0.25s">
-            <h3>Categories</h3>
-            <ul class="filter-list">
-                @foreach($categories ?? [] as $category)
-                    <li>
-                        <label class="filter-checkbox">
-                            <input type="checkbox" name="categories[]" value="{{ $category->id ?? $category['id'] }}"
-                                   {{ in_array($category->id ?? $category['id'], request('categories', [])) ? 'checked' : '' }}
-                                   onchange="this.form.submit()">
-                            <span class="checkmark"></span>
-                            {{ $category->name ?? $category['name'] }}
-                            <span class="count">({{ $category->count ?? 0 }})</span>
-                        </label>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+        <!-- Categories -->
+        @if($categories->count() > 0)
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Categories</h4>
+                <ul class="filter-list">
+                    @foreach($categories as $category)
+                        <li>
+                            <label>
+                                <input type="checkbox" name="categories[]"
+                                       value="{{ $category->id }}"
+                                       {{ in_array($category->id, (array) request('categories', [])) ? 'checked' : '' }}>
+                                <span>{{ $category->name }}</span>
+                                <span class="count">({{ $category->products_count }})</span>
+                            </label>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <!-- Brand Filter -->
-        <div class="filter-widget wow fadeInUp" data-wow-delay="0.5s">
-            <h3>Brands</h3>
-            <ul class="filter-list">
-                @foreach($brands ?? [] as $brand)
-                    <li>
-                        <label class="filter-checkbox">
-                            <input type="checkbox" name="brands[]" value="{{ $brand->id ?? $brand['id'] }}"
-                                   {{ in_array($brand->id ?? $brand['id'], request('brands', [])) ? 'checked' : '' }}
-                                   onchange="this.form.submit()">
-                            <span class="checkmark"></span>
-                            {{ $brand->name ?? $brand['name'] }}
-                            <span class="count">({{ $brand->count ?? 0 }})</span>
-                        </label>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+        <!-- Brands -->
+        @if($brands->count() > 0)
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Brands</h4>
+                <ul class="filter-list">
+                    @foreach($brands as $brand)
+                        <li>
+                            <label>
+                                <input type="checkbox" name="brands[]"
+                                       value="{{ $brand->id }}"
+                                       {{ in_array($brand->id, (array) request('brands', [])) ? 'checked' : '' }}>
+                                <span>{{ $brand->name }}</span>
+                                <span class="count">({{ $brand->products_count }})</span>
+                            </label>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <!-- Price Range Filter -->
-        <div class="filter-widget wow fadeInUp" data-wow-delay="0.75s">
-            <h3>Price Range</h3>
-            <div class="price-range">
-                <div class="price-inputs">
-                    <div class="price-input">
-                        <label>Min</label>
-                        <input type="number" name="min_price" class="form-control" 
-                               placeholder="$0" value="{{ request('min_price') }}">
-                    </div>
-                    <div class="price-input">
-                        <label>Max</label>
-                        <input type="number" name="max_price" class="form-control" 
-                               placeholder="$1000" value="{{ request('max_price') }}">
-                    </div>
-                </div>
-                <button type="submit" class="btn-default btn-sm mt-2">Apply Filter</button>
+        <!-- Price Range -->
+        <div class="sidebar-widget">
+            <h4 class="widget-title">Price Range</h4>
+            <div class="price-range-inputs">
+                <input type="number" name="min_price" class="form-control"
+                       placeholder="Min" min="0"
+                       value="{{ request('min_price') }}">
+                <span>-</span>
+                <input type="number" name="max_price" class="form-control"
+                       placeholder="Max" min="0"
+                       value="{{ request('max_price') }}">
             </div>
         </div>
 
-        <!-- Rating Filter -->
-        <div class="filter-widget wow fadeInUp" data-wow-delay="1.0s">
-            <h3>Rating</h3>
-            <ul class="filter-list">
-                @for($i = 4; $i >= 1; $i--)
-                    <li>
-                        <label class="filter-checkbox">
-                            <input type="checkbox" name="ratings[]" value="{{ $i }}"
-                                   {{ in_array($i, request('ratings', [])) ? 'checked' : '' }}
-                                   onchange="this.form.submit()">
-                            <span class="checkmark"></span>
-                            <span class="stars">
-                                @for($j = 1; $j <= 5; $j++)
-                                    <i class="fa-solid fa-star {{ $j <= $i ? 'active' : '' }}"></i>
-                                @endfor
-                            </span>
-                            <span class="count">&amp; Up</span>
-                        </label>
-                    </li>
-                @endfor
-            </ul>
-        </div>
-
-        <!-- Reset Filters -->
-        <div class="filter-actions wow fadeInUp" data-wow-delay="1.25s">
-            <a href="{{ route('products') }}" class="btn-default btn-border btn-sm">Reset All</a>
+        <!-- Actions -->
+        <div class="sidebar-widget">
+            <button type="submit" class="btn-default w-100">Apply Filters</button>
+            <a href="{{ route('products') }}" class="btn-outline w-100 mt-2 text-center d-block">Reset All</a>
         </div>
     </form>
 </div>
+<!-- Products Sidebar End -->
+
+@push('styles')
+<style>
+    .products-sidebar .sidebar-widget {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .products-sidebar .widget-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    .products-sidebar .filter-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .products-sidebar .filter-list li {
+        margin-bottom: 10px;
+    }
+    .products-sidebar .filter-list label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .products-sidebar .filter-list .count {
+        margin-left: auto;
+        color: #999;
+        font-size: 12px;
+    }
+    .products-sidebar .search-box {
+        display: flex;
+        gap: 8px;
+    }
+    .products-sidebar .search-box .form-control {
+        flex: 1;
+    }
+    .products-sidebar .search-box button {
+        background: #28a745;
+        color: #fff;
+        border: none;
+        padding: 0 14px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .products-sidebar .price-range-inputs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .products-sidebar .price-range-inputs input {
+        flex: 1;
+    }
+    .products-sidebar .btn-outline {
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 6px;
+        color: #333;
+        text-decoration: none;
+    }
+    .products-sidebar .btn-outline:hover {
+        background: #f5f5f5;
+    }
+
+    /* WhatsApp button */
+    .btn-whatsapp {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: #25D366;
+        color: #fff !important;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn-whatsapp:hover {
+        background: #128C7E;
+        color: #fff !important;
+        transform: translateY(-1px);
+    }
+    .btn-whatsapp i { font-size: 1.1em; }
+
+    .product-item .product-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+    }
+    .product-item .product-actions .btn-default {
+        flex: 1;
+    }
+</style>
+@endpush

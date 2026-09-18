@@ -238,3 +238,51 @@ if (!function_exists('cleanupConfigImages')) {
     }
 }
 // ------------------------------------------------------------- end config
+
+/**
+ * Build a WhatsApp click-to-chat URL with an optional pre-filled message.
+ *
+ * @param string $message
+ * @return string
+ */
+if (!function_exists('whatsappUrl')) {
+    function whatsappUrl(string $message = ''): string
+    {
+        $number = preg_replace('/[^0-9]/', '', configSetting('whatsapp_number'));
+
+        if ($number === '') {
+            return '#';
+        }
+
+        $url = 'https://wa.me/' . $number;
+
+        if ($message !== '') {
+            $url .= '?text=' . rawurlencode($message);
+        }
+
+        return $url;
+    }
+}
+
+/**
+ * Build a WhatsApp enquiry URL for a given product.
+ *
+ * @param object $product
+ * @return string
+ */
+if (!function_exists('productWhatsappUrl')) {
+    function productWhatsappUrl(object $product): string
+    {
+        $name = $product->name ?? ($product['name'] ?? '');
+        $slug = $product->slug ?? ($product['slug'] ?? '');
+
+        $message = "Hello,\n\nI am interested in this product:\n\n"
+            . "*{$name}*\n"
+            . "Link: " . url('/product/' . $slug) . "\n\n"
+            . "Please share more details, price, and availability.";
+
+        return whatsappUrl($message);
+    }
+}
+
+// ------------------------------------------------------------- end whatsapp

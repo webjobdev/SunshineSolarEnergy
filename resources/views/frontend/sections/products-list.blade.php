@@ -6,30 +6,31 @@
             <div class="col-lg-3">
                 @include('frontend.sections.products-sidebar')
             </div>
-            
+
             <!-- Products Grid -->
             <div class="col-lg-9">
-                <!-- Products Header -->
                 <div class="products-header wow fadeInUp">
                     <div class="row align-items-center">
                         <div class="col-md-6">
-                            <p class="products-count">Showing {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} of {{ $products->total() ?? 0 }} products</p>
+                            <p class="products-count">
+                                Showing {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }}
+                                of {{ $products->total() ?? 0 }} products
+                            </p>
                         </div>
                         <div class="col-md-6">
                             <div class="products-sort">
                                 <label for="sort">Sort by:</label>
-                                <select id="sort" class="form-control" onchange="window.location.href=this.value">
-                                    <option value="{{ route('products', ['sort' => 'newest']) }}" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
-                                    <option value="{{ route('products', ['sort' => 'price_low']) }}" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
-                                    <option value="{{ route('products', ['sort' => 'price_high']) }}" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
-                                    <option value="{{ route('products', ['sort' => 'popular']) }}" {{ request('sort') == 'popular' ? 'selected' : '' }}>Popular</option>
+                                <select id="sort" class="form-control">
+                                    <option value="newest"     {{ request('sort') == 'newest'     ? 'selected' : '' }}>Newest</option>
+                                    <option value="price_low"  {{ request('sort') == 'price_low'  ? 'selected' : '' }}>Price: Low to High</option>
+                                    <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
+                                    <option value="popular"    {{ request('sort') == 'popular'    ? 'selected' : '' }}>Popular</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Products Grid -->
                 <div class="row products-grid">
                     @forelse($products as $product)
                         <div class="col-lg-4 col-md-6">
@@ -45,7 +46,6 @@
                     @endforelse
                 </div>
 
-                <!-- Pagination -->
                 @if($products->hasPages())
                     <div class="row">
                         <div class="col-md-12">
@@ -60,3 +60,22 @@
     </div>
 </div>
 <!-- Products Page End -->
+
+@push('scripts')
+<script>
+$(document).ready(function () {
+    // Sort dropdown — preserve current filters
+    $('#sort').on('change', function () {
+        var url = new URL(window.location.href);
+        url.searchParams.set('sort', $(this).val());
+        url.searchParams.delete('page');
+        window.location.href = url.toString();
+    });
+
+    // Auto-submit filter form on checkbox / price change
+    $('#productsFilterForm input[type="checkbox"], #productsFilterForm input[type="number"]').on('change', function () {
+        $('#productsFilterForm').submit();
+    });
+});
+</script>
+@endpush
