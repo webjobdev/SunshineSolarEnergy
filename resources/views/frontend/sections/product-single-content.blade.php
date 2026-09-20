@@ -12,6 +12,18 @@
     $brandName     = $product->brand->name       ?? '';
     $isNew         = ($product->new      ?? '') === 'active';
     $isTrending    = ($product->trending ?? '') === 'active';
+
+    // Build unified gallery array: [main image] + [gallery images]
+    $galleryList = [];
+    if ($mainImage) {
+        $galleryList[] = $mainImage;
+    }
+    foreach ($galleryImages as $gallery) {
+        if ($gallery->image_url) {
+            $galleryList[] = $gallery->image_url;
+        }
+    }
+    $galleryCount = count($galleryList);
 @endphp
 
 <div class="page-product-single">
@@ -40,26 +52,51 @@
                         </div>
                     @endif
 
-                    <div class="product-main-image">
+                    {{-- Main image with arrows --}}
+                    <div class="product-main-image" id="productMainImageWrap">
                         @if($mainImage)
-                            <img id="mainProductImage" src="{{ $mainImage }}" alt="{{ $productName }}">
+                            <img id="mainProductImage" src="{{ $galleryList[0] ?? $mainImage }}" alt="{{ $productName }}">
                         @else
                             <img id="mainProductImage"
                                  src="{{ asset('frontend/images/products/placeholder.jpg') }}"
                                  alt="{{ $productName }}">
                         @endif
+
+                        @if($galleryCount > 1)
+                            {{-- Prev arrow --}}
+                            <button type="button"
+                                    class="gallery-arrow gallery-arrow-prev"
+                                    id="galleryPrev"
+                                    aria-label="Previous image">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+
+                            {{-- Next arrow --}}
+                            <button type="button"
+                                    class="gallery-arrow gallery-arrow-next"
+                                    id="galleryNext"
+                                    aria-label="Next image">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+
+                            {{-- Counter --}}
+                            <div class="gallery-counter" id="galleryCounter">
+                                <span id="galleryCurrent">1</span>
+                                <span class="sep">/</span>
+                                <span id="galleryTotal">{{ $galleryCount }}</span>
+                            </div>
+                        @endif
                     </div>
 
-                    @if($galleryImages->count() > 0 || $mainImage)
-                        <div class="product-thumbnails">
-                            @if($mainImage)
-                                <button type="button" class="thumb-btn active" data-full="{{ $mainImage }}">
-                                    <img src="{{ $mainImage }}" alt="{{ $productName }}">
-                                </button>
-                            @endif
-                            @foreach($galleryImages as $gallery)
-                                <button type="button" class="thumb-btn" data-full="{{ $gallery->image_url }}">
-                                    <img src="{{ $gallery->image_url }}" alt="{{ $productName }}">
+                    {{-- Thumbnails --}}
+                    @if($galleryCount > 0)
+                        <div class="product-thumbnails" id="galleryThumbs">
+                            @foreach($galleryList as $index => $imageUrl)
+                                <button type="button"
+                                        class="thumb-btn {{ $index === 0 ? 'active' : '' }}"
+                                        data-full="{{ $imageUrl }}"
+                                        data-index="{{ $index }}">
+                                    <img src="{{ $imageUrl }}" alt="{{ $productName }} - {{ $index + 1 }}">
                                 </button>
                             @endforeach
                         </div>
@@ -225,7 +262,7 @@
     left: 30px;
     display: flex;
     gap: 6px;
-    z-index: 2;
+    z-index: 3;
 }
 
 .g-badge {
@@ -242,7 +279,9 @@
 .g-badge-new      { background: #0d6efd; }
 .g-badge-trending { background: #fd7e14; }
 
+/* Main image */
 .product-main-image {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -258,6 +297,65 @@
     max-height: 100%;
     object-fit: contain;
     transition: opacity 0.25s;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Arrows */
+.gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a1a1a;
+    border: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
+}
+
+.gallery-arrow:hover {
+    background: #28a745;
+    color: #fff;
+    border-color: #28a745;
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 6px 18px rgba(40, 167, 69, 0.35);
+}
+
+.gallery-arrow:active {
+    transform: translateY(-50%) scale(0.96);
+}
+
+.gallery-arrow-prev { left: 12px; }
+.gallery-arrow-next { right: 12px; }
+
+/* Counter */
+.gallery-counter {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    z-index: 2;
+    backdrop-filter: blur(4px);
+}
+
+.gallery-counter .sep {
+    opacity: 0.6;
+    margin: 0 3px;
 }
 
 /* Thumbnails */
@@ -606,6 +704,23 @@
     .product-share-row    { flex-direction: column; align-items: flex-start; gap: 10px; }
     .product-description-body { font-size: 14px; }
     .desc-heading h2      { font-size: 17px; }
+
+    /* Smaller arrows on mobile */
+    .gallery-arrow {
+        width: 38px;
+        height: 38px;
+        font-size: 13px;
+    }
+
+    .gallery-arrow-prev { left: 8px; }
+    .gallery-arrow-next { right: 8px; }
+
+    .gallery-counter {
+        font-size: 11px;
+        padding: 4px 10px;
+        bottom: 8px;
+        right: 8px;
+    }
 }
 </style>
 @endpush
@@ -613,14 +728,113 @@
 @push('scripts')
 <script>
 $(document).ready(function () {
-    $('.product-thumbnails .thumb-btn').on('click', function () {
-        var fullSrc = $(this).data('full');
-        $('#mainProductImage').fadeTo(120, 0.3, function () {
-            $(this).attr('src', fullSrc).fadeTo(120, 1);
+    // ==========================
+    // Gallery
+    // ==========================
+    var galleryItems = @json($galleryList);
+    var currentIndex = 0;
+    var totalItems   = galleryItems.length;
+
+    var $mainImage = $('#mainProductImage');
+    var $thumbs    = $('#galleryThumbs .thumb-btn');
+    var $counter   = $('#galleryCurrent');
+
+    /**
+     * Show image at index with fade effect.
+     */
+    function showImage(index) {
+        if (index < 0) index = totalItems - 1;
+        if (index >= totalItems) index = 0;
+
+        currentIndex = index;
+        var src = galleryItems[index];
+
+        $mainImage.fadeTo(120, 0.3, function () {
+            $(this).attr('src', src).fadeTo(120, 1);
         });
-        $('.product-thumbnails .thumb-btn').removeClass('active');
-        $(this).addClass('active');
+
+        // Update active thumb
+        $thumbs.removeClass('active');
+        $thumbs.filter('[data-index="' + index + '"]').addClass('active');
+
+        // Update counter
+        if ($counter.length) $counter.text(index + 1);
+    }
+
+    /**
+     * Go to previous image.
+     */
+    function prevImage() {
+        showImage(currentIndex - 1);
+    }
+
+    /**
+     * Go to next image.
+     */
+    function nextImage() {
+        showImage(currentIndex + 1);
+    }
+
+    // Arrow clicks
+    $('#galleryPrev').on('click', function (e) {
+        e.preventDefault();
+        prevImage();
     });
+
+    $('#galleryNext').on('click', function (e) {
+        e.preventDefault();
+        nextImage();
+    });
+
+    // Thumbnail clicks
+    $thumbs.on('click', function () {
+        var index = parseInt($(this).data('index'), 10);
+        showImage(index);
+    });
+
+    // Keyboard arrow navigation
+    $(document).on('keydown', function (e) {
+        // Only if gallery exists and page not typing in input
+        if (totalItems <= 1) return;
+        if ($(e.target).is('input, textarea, select')) return;
+
+        if (e.key === 'ArrowLeft') {
+            prevImage();
+        } else if (e.key === 'ArrowRight') {
+            nextImage();
+        }
+    });
+
+    // ==========================
+    // Touch swipe support (mobile)
+    // ==========================
+    var touchStartX = 0;
+    var touchEndX = 0;
+    var $mainWrap = $('#productMainImageWrap');
+
+    $mainWrap.on('touchstart', function (e) {
+        touchStartX = e.originalEvent.touches[0].clientX;
+    });
+
+    $mainWrap.on('touchend', function (e) {
+        touchEndX = e.originalEvent.changedTouches[0].clientX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        if (totalItems <= 1) return;
+
+        var diff = touchStartX - touchEndX;
+        var threshold = 50;
+
+        if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+                nextImage();
+            } else {
+                prevImage();
+            }
+        }
+    }
 });
 </script>
 @endpush

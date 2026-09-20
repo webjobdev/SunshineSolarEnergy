@@ -280,7 +280,7 @@ class HomeController extends Controller
         return view('frontend.product-single', compact('pages', 'product', 'relatedProducts'));
     }
 
-   /**
+    /**
      * AJAX endpoint for product filters, sort, and pagination.
      *
      * @method GET
@@ -303,6 +303,7 @@ class HomeController extends Controller
                 'last_item'    => $products->lastItem() ?? 0,
                 'current_page' => $products->currentPage(),
                 'last_page'    => $products->lastPage(),
+                'sort'         => $request->input('sort', 'newest'),
             ]);
         } catch (Exception $e) {
             return response()->json([
@@ -311,10 +312,12 @@ class HomeController extends Controller
             ], 500);
         }
     }
+
     /**
      * Get filtered products with pagination from database.
      *
-     * @return LengthAwarePaginator
+     * @param Request $request
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     private function getFilteredProducts(Request $request)
     {
@@ -325,8 +328,8 @@ class HomeController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('short_description', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+                  ->orWhere('short_description', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -340,20 +343,20 @@ class HomeController extends Controller
             $query->whereIn('brand_id', (array) $request->brands);
         }
 
-        // Sorting
+        // ✅ SORTING — works for every case
         switch ($request->input('sort')) {
             case 'price_low':
-                $query->orderBy('price', 'asc');
+                $query->orderByRaw('price IS NULL, price ASC');
                 break;
             case 'price_high':
-                $query->orderBy('price', 'desc');
+                $query->orderByRaw('price IS NULL, price DESC');
                 break;
             case 'popular':
-                $query->orderBy('sort_order', 'asc');
+                $query->orderBy('sort_order', 'asc')->orderBy('id', 'desc');
                 break;
             case 'newest':
             default:
-                $query->latest();
+                $query->orderBy('id', 'desc');
                 break;
         }
 
