@@ -8,7 +8,10 @@ use App\Models\Admin\Product;
 use App\Models\Admin\ProductBrand;
 use App\Models\Admin\ProductCategory;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
@@ -18,9 +21,8 @@ class HomeController extends Controller
      * Show the home page view.
      *
      * @method GET
-     * @url /
      *
-     * @return View
+     * @url /
      */
     public function index(): View
     {
@@ -39,9 +41,8 @@ class HomeController extends Controller
      * Show the about page view.
      *
      * @method GET
-     * @url /about
      *
-     * @return View
+     * @url /about
      */
     public function about(): View
     {
@@ -121,9 +122,8 @@ class HomeController extends Controller
      * Show the services page view.
      *
      * @method GET
-     * @url /services
      *
-     * @return View
+     * @url /services
      */
     public function services(): View
     {
@@ -161,10 +161,8 @@ class HomeController extends Controller
      * Show service single page.
      *
      * @method GET
-     * @url /service-single/{slug?}
      *
-     * @param string|null $slug
-     * @return View
+     * @url /service-single/{slug?}
      */
     public function serviceSingle(?string $slug = null): View
     {
@@ -207,9 +205,6 @@ class HomeController extends Controller
 
     /**
      * Get service benefits.
-     *
-     * @param string|null $slug
-     * @return array
      */
     private function getServiceBenefits(?string $slug): array
     {
@@ -225,8 +220,6 @@ class HomeController extends Controller
 
     /**
      * Get service FAQs.
-     *
-     * @return array
      */
     private function getServiceFaqs(): array
     {
@@ -242,10 +235,8 @@ class HomeController extends Controller
      * Show products page with filters and pagination.
      *
      * @method GET
-     * @url /products
      *
-     * @param Request $request
-     * @return View
+     * @url /products
      */
     public function products(Request $request): View
     {
@@ -263,10 +254,8 @@ class HomeController extends Controller
      * Show product single page.
      *
      * @method GET
-     * @url /product/{slug}
      *
-     * @param string|null $slug
-     * @return View
+     * @url /product/{slug}
      */
     public function productSingle(?string $slug = null): View
     {
@@ -291,11 +280,41 @@ class HomeController extends Controller
         return view('frontend.product-single', compact('pages', 'product', 'relatedProducts'));
     }
 
+   /**
+     * AJAX endpoint for product filters, sort, and pagination.
+     *
+     * @method GET
+     * @url /products/filter
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function productsFilter(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $products = $this->getFilteredProducts($request);
+            $html = view('frontend.sections.products-grid', compact('products'))->render();
+
+            return response()->json([
+                'status'       => true,
+                'html'         => $html,
+                'total'        => $products->total(),
+                'first_item'   => $products->firstItem() ?? 0,
+                'last_item'    => $products->lastItem() ?? 0,
+                'current_page' => $products->currentPage(),
+                'last_page'    => $products->lastPage(),
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
     /**
      * Get filtered products with pagination from database.
      *
-     * @param Request $request
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     private function getFilteredProducts(Request $request)
     {
@@ -321,19 +340,6 @@ class HomeController extends Controller
             $query->whereIn('brand_id', (array) $request->brands);
         }
 
-        // Min price
-        if ($request->filled('min_price')) {
-            $query->where('price', '>=', (float) $request->min_price);
-        }
-
-        // Max price
-        if ($request->filled('max_price')) {
-            $query->where('price', '<=', (float) $request->max_price);
-        }
-
-        // Rating (uses sort_order style placeholder since no rating column)
-        // If you add a rating column later, filter here.
-
         // Sorting
         switch ($request->input('sort')) {
             case 'price_low':
@@ -357,7 +363,7 @@ class HomeController extends Controller
     /**
      * Get active categories with product counts.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     private function getCategoriesWithCounts()
     {
@@ -372,7 +378,7 @@ class HomeController extends Controller
     /**
      * Get active brands with product counts.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     private function getBrandsWithCounts()
     {
@@ -388,9 +394,8 @@ class HomeController extends Controller
      * Show contact page.
      *
      * @method GET
-     * @url /contact
      *
-     * @return View
+     * @url /contact
      */
     public function contact(): View
     {
@@ -418,12 +423,10 @@ class HomeController extends Controller
      * Submit contact form.
      *
      * @method POST
-     * @url /contact/submit
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @url /contact/submit
      */
-    public function submitContact(Request $request): \Illuminate\Http\JsonResponse
+    public function submitContact(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -458,9 +461,8 @@ class HomeController extends Controller
      * Show privacy policy page.
      *
      * @method GET
-     * @url /privacy-policy
      *
-     * @return View
+     * @url /privacy-policy
      */
     public function privacyPolicy(): View
     {
@@ -471,9 +473,8 @@ class HomeController extends Controller
      * Show terms & conditions page.
      *
      * @method GET
-     * @url /terms-conditions
      *
-     * @return View
+     * @url /terms-conditions
      */
     public function termsConditions(): View
     {
@@ -484,9 +485,8 @@ class HomeController extends Controller
      * Show disclaimer page.
      *
      * @method GET
-     * @url /disclaimer
      *
-     * @return View
+     * @url /disclaimer
      */
     public function disclaimer(): View
     {
@@ -497,9 +497,8 @@ class HomeController extends Controller
      * Show refund policy page.
      *
      * @method GET
-     * @url /refund-policy
      *
-     * @return View
+     * @url /refund-policy
      */
     public function refundPolicy(): View
     {
@@ -508,11 +507,6 @@ class HomeController extends Controller
 
     /**
      * Render a legal page.
-     *
-     * @param string $slug
-     * @param string $title
-     * @param string $pageType
-     * @return View
      */
     private function renderLegalPage(string $slug, string $title, string $pageType): View
     {
@@ -526,9 +520,8 @@ class HomeController extends Controller
      * Show FAQ page.
      *
      * @method GET
-     * @url /faq
      *
-     * @return View
+     * @url /faq
      */
     public function faq(): View
     {

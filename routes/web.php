@@ -174,6 +174,7 @@ Route::get('/services', [HomeController::class, 'services'])->name('services');
 Route::get('/service-single/{slug?}', [HomeController::class, 'serviceSingle'])->name('service.single');
 Route::get('/products', [HomeController::class, 'products'])->name('products');
 Route::get('/product/{slug}', [HomeController::class, 'productSingle'])->name('product.single');
+Route::get('/products/filter', [HomeController::class, 'productsFilter'])->name('products.filter');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::post('/contact/submit', [HomeController::class, 'submitContact'])->name('contact.submit');
 
