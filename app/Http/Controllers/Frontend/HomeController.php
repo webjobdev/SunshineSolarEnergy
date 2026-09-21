@@ -7,6 +7,7 @@ use App\Models\Admin\Page;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductBrand;
 use App\Models\Admin\ProductCategory;
+use App\Models\Admin\Service;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -118,7 +119,7 @@ class HomeController extends Controller
         ));
     }
 
-    /**
+        /**
      * Show the services page view.
      *
      * @method GET
@@ -127,34 +128,22 @@ class HomeController extends Controller
      */
     public function services(): View
     {
-        $pages = Page::where('status', 'active')->get();
-        $servicesPage = Page::where('slug', 'services')->where('status', 'active')->first();
+        try {
+            $pages = Page::where('status', 'active')->get();
 
-        $servicesData = [
-            'subtitle' => 'Our Services',
-            'title' => 'What We Offer',
-            'items' => [
-                ['title' => 'Solar Maintenance', 'description' => 'Aenean mattis mauris turpis.', 'image' => 'service-1.jpg', 'icon' => 'icon-service-1.svg', 'delay' => '0.25s', 'slug' => 'solar-maintenance'],
-                ['title' => 'Energy Saving Devices', 'description' => 'Aenean mattis mauris turpis.', 'image' => 'service-2.jpg', 'icon' => 'icon-service-2.svg', 'delay' => '0.5s', 'slug' => 'energy-saving-devices'],
-                ['title' => 'Solar Solutions', 'description' => 'Aenean mattis mauris turpis.', 'image' => 'service-3.jpg', 'icon' => 'icon-service-3.svg', 'delay' => '0.75s', 'slug' => 'solar-solutions'],
-                ['title' => 'Solar PV Systems', 'description' => 'Aenean mattis mauris turpis.', 'image' => 'service-4.jpg', 'icon' => 'icon-service-4.svg', 'delay' => '1.0s', 'slug' => 'solar-pv-systems'],
-                ['title' => 'Hybrid Energy', 'description' => 'Aenean mattis mauris turpis.', 'image' => 'service-5.jpg', 'icon' => 'icon-service-5.svg', 'delay' => '1.25s', 'slug' => 'hybrid-energy'],
-                ['title' => 'Renewable Energy', 'description' => 'Aenean mattis mauris turpis.', 'image' => 'service-6.jpg', 'icon' => 'icon-service-6.svg', 'delay' => '1.5s', 'slug' => 'renewable-energy'],
-            ],
-        ];
+            $servicesPage = Page::where('slug', 'services')
+                ->where('status', 'active')
+                ->first();
 
-        $whyChooseData = [
-            'subtitle' => 'Why Choose Us',
-            'title' => 'Providing Solar Energy Solutions',
-            'items' => [
-                ['title' => 'Efficiency & Power', 'icon' => 'icon-whyus-1.svg', 'image' => 'whyus-1.jpg', 'description' => 'Ut ut eros risus.', 'delay' => '0.25s'],
-                ['title' => 'Trust & Warranty', 'icon' => 'icon-whyus-2.svg', 'image' => 'whyus-2.jpg', 'description' => 'Ut ut eros risus.', 'delay' => '0.5s'],
-                ['title' => 'High Quality Work', 'icon' => 'icon-whyus-3.svg', 'image' => 'whyus-3.jpg', 'description' => 'Ut ut eros risus.', 'delay' => '0.75s'],
-                ['title' => '24*7 Support', 'icon' => 'icon-whyus-4.svg', 'image' => 'whyus-4.jpg', 'description' => 'Ut ut eros risus.', 'delay' => '1.0s'],
-            ],
-        ];
+            $services = Service::active()
+                ->orderBy('sort_order')
+                ->orderBy('id', 'desc')
+                ->get();
 
-        return view('frontend.services', compact('pages', 'servicesPage', 'servicesData', 'whyChooseData'));
+            return view('frontend.services', compact('pages', 'servicesPage', 'services'));
+        } catch (Exception $exception) {
+            abort(500, $exception->getMessage());
+        }
     }
 
     /**
@@ -166,43 +155,37 @@ class HomeController extends Controller
      */
     public function serviceSingle(?string $slug = null): View
     {
-        $pages = Page::where('status', 'active')->get();
+        try {
+            $pages = Page::where('status', 'active')->get();
 
-        $service = (object) [
-            'title' => ucwords(str_replace('-', ' ', $slug ?? 'Solar Solutions')),
-            'slug' => $slug ?? 'solar-solutions',
-            'featured_image' => 'service-feature-img.jpg',
-            'content' => '<p>Complete solar solutions for residential and commercial properties.</p>',
-            'why_us' => 'We provide comprehensive solar solutions with proven expertise.',
-            'video_url' => 'https://www.youtube.com/watch?v=2JNMGesMC2Y',
-            'video_thumbnail' => 'video-bg.jpg',
-            'benefits_title' => 'Benefits of Solar Energy',
-            'feature_image' => 'planning.jpg',
-            'feature_title' => 'Planning & Strategy',
-            'feature_description' => 'Lorem Ipsum is simply dummy text.',
-            'feature_list' => [
-                'Research beyond the business plan',
-                'Marketing options and rates',
-                'The ability to turnaround consulting',
-                'It was popularised in the 1960s',
-            ],
-            'faq_title' => 'Frequently Asked Questions',
-            'benefits' => $this->getServiceBenefits($slug),
-            'faqs' => $this->getServiceFaqs(),
-        ];
+            if (!$slug) {
+                $firstService = Service::active()->orderBy('sort_order')->first();
+                if (!$firstService) {
+                    abort(404, 'No services available.');
+                }
+                return redirect()->route('service.single', $firstService->slug);
+            }
 
-        $allServices = [
-            (object) ['title' => 'Solar Maintenance', 'slug' => 'solar-maintenance'],
-            (object) ['title' => 'Energy Saving Devices', 'slug' => 'energy-saving-devices'],
-            (object) ['title' => 'Solar Solutions', 'slug' => 'solar-solutions'],
-            (object) ['title' => 'Solar PV Systems', 'slug' => 'solar-pv-systems'],
-            (object) ['title' => 'Hybrid Energy', 'slug' => 'hybrid-energy'],
-            (object) ['title' => 'Renewable Energy', 'slug' => 'renewable-energy'],
-        ];
+            $service = Service::where('slug', $slug)
+                ->where('status', 'active')
+                ->firstOrFail();
 
-        return view('frontend.service-single', compact('pages', 'service', 'allServices'));
+            $allServices = Service::active()
+                ->orderBy('sort_order')
+                ->orderBy('id', 'desc')
+                ->get();
+
+            $relatedServices = Service::active()
+                ->where('id', '!=', $service->id)
+                ->orderBy('sort_order')
+                ->limit(3)
+                ->get();
+
+            return view('frontend.service-single', compact('pages', 'service', 'allServices', 'relatedServices'));
+        } catch (Exception $exception) {
+            abort(404, 'Service not found.');
+        }
     }
-
     /**
      * Get service benefits.
      */
