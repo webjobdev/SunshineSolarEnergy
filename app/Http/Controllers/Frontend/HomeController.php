@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\LegalPage;
 use App\Models\Admin\Page;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductBrand;
@@ -47,76 +48,27 @@ class HomeController extends Controller
      */
     public function about(): View
     {
-        $pages = Page::where('status', 'active')->get();
-        $aboutPage = Page::where('slug', 'about')->where('status', 'active')->first();
+        try {
+            $pages = Page::where('status', 'active')->get();
 
-        $aboutData = [
-            'subtitle' => 'About Us',
-            'title' => 'About Green Energy Solar',
-            'description1' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-            'description2' => 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.',
-            'features' => [
-                'Solar Inverter Setup',
-                'Battery Storage Solutions',
-                'Solar Material Financing',
-                '24 X 7 Call & Chat Support',
-                'Proven Track Record',
-                'Customer-Centric Approach',
-            ],
-        ];
+            $aboutPage = Page::where('slug', 'about')
+                ->where('status', 'active')
+                ->first();
 
-        $whyChooseData = [
-            'subtitle' => 'Why Choose Us',
-            'title' => 'Providing Solar Energy Solutions',
-            'items' => [
-                ['title' => 'Efficiency & Power', 'icon' => 'icon-whyus-1.svg', 'image' => 'whyus-1.jpg', 'description' => 'Ut ut eros risus. In luctus fringilla augue.', 'delay' => '0.25s'],
-                ['title' => 'Trust & Warranty', 'icon' => 'icon-whyus-2.svg', 'image' => 'whyus-2.jpg', 'description' => 'Ut ut eros risus. In luctus fringilla augue.', 'delay' => '0.5s'],
-                ['title' => 'High Quality Work', 'icon' => 'icon-whyus-3.svg', 'image' => 'whyus-3.jpg', 'description' => 'Ut ut eros risus. In luctus fringilla augue.', 'delay' => '0.75s'],
-                ['title' => '24*7 Support', 'icon' => 'icon-whyus-4.svg', 'image' => 'whyus-4.jpg', 'description' => 'Ut ut eros risus. In luctus fringilla augue.', 'delay' => '1.0s'],
-            ],
-        ];
+            $about = LegalPage::where('type', 'about')->first();
 
-        $projectsData = [
-            'subtitle' => 'Latest Project',
-            'title' => 'Our Latest Projects',
-            'items' => [
-                ['title' => 'Photon Fusion', 'category' => 'Solar Power', 'image' => 'project-1.jpg', 'delay' => '0.25s'],
-                ['title' => 'LuxSolar Dynamics', 'category' => 'Wind Energy', 'image' => 'project-2.jpg', 'delay' => '0.5s'],
-                ['title' => 'HelioHarbor Dynamics', 'category' => 'Geothermal Energy', 'image' => 'project-3.jpg', 'delay' => '0.75s'],
-                ['title' => 'SolarLoom Energy', 'category' => 'Solar Power', 'image' => 'project-4.jpg', 'delay' => '1.0s'],
-            ],
-        ];
+            if (!$about) {
+                $about = LegalPage::create([
+                    'type' => 'about',
+                    'title' => 'About Us',
+                    'description' => null,
+                ]);
+            }
 
-        $testimonialData = [
-            'subtitle' => 'Testimonials',
-            'title' => 'Words From Our Customer',
-            'items' => [
-                ['name' => 'John Doe', 'role' => 'Customer', 'image' => 'author-1.jpg', 'rating' => 5, 'quote' => 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem.'],
-                ['name' => 'Arita Benson', 'role' => 'Customer', 'image' => 'author-2.jpg', 'rating' => 5, 'quote' => 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem.'],
-                ['name' => 'W. S. Gilbert', 'role' => 'Customer', 'image' => 'author-3.jpg', 'rating' => 5, 'quote' => 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem.'],
-            ],
-        ];
-
-        $teamData = [
-            'subtitle' => 'Our Team',
-            'title' => 'Our Best Experts',
-            'members' => [
-                ['name' => 'John Doe', 'position' => 'Solar Engineer', 'image' => 'team-1.jpg', 'delay' => '0.25s'],
-                ['name' => 'Arita Benson', 'position' => 'Solar Engineer', 'image' => 'team-2.jpg', 'delay' => '0.5s'],
-                ['name' => 'W. S. Gilbert', 'position' => 'Solar Engineer', 'image' => 'team-3.jpg', 'delay' => '0.75s'],
-                ['name' => 'Alpa Silva', 'position' => 'Solar Engineer', 'image' => 'team-4.jpg', 'delay' => '1.0s'],
-            ],
-        ];
-
-        return view('frontend.about', compact(
-            'pages',
-            'aboutPage',
-            'aboutData',
-            'whyChooseData',
-            'projectsData',
-            'testimonialData',
-            'teamData'
-        ));
+            return view('frontend.about', compact('pages', 'aboutPage', 'about'));
+        } catch (Exception $exception) {
+            abort(500, $exception->getMessage());
+        }
     }
 
         /**
@@ -488,16 +440,33 @@ class HomeController extends Controller
      */
     public function refundPolicy(): View
     {
-        return $this->renderLegalPage('refund-policy', 'Refund & Cancellation Policy', 'refund');
+        return $this->renderLegalPage('refund-cancellation-policy', 'Refund & Cancellation Policy', 'refund');
     }
 
-    /**
+
+   /**
      * Render a legal page.
+     *
+     * @param string $slug
+     * @param string $title
+     * @param string $pageType
+     * @return View
      */
     private function renderLegalPage(string $slug, string $title, string $pageType): View
     {
         $pages = Page::where('status', 'active')->get();
-        $legalPage = Page::where('slug', $slug)->where('status', 'active')->first();
+
+        // Pull from legal_pages table
+        $legalPage = LegalPage::where('type', $slug)->first();
+
+        // If not seeded yet, create an empty one on-the-fly
+        if (!$legalPage) {
+            $legalPage = LegalPage::create([
+                'type' => $slug,
+                'title' => $title,
+                'description' => null,
+            ]);
+        }
 
         return view('frontend.legal', compact('pages', 'legalPage', 'pageType', 'title'));
     }
