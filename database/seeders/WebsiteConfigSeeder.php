@@ -51,7 +51,7 @@ class WebsiteConfigSeeder extends Seeder
                 'config_help' => 'Recommended: 32x32 or 64x64 pixels',
                 'sort_order' => 4,
             ],
-            
+
             // Contact Settings
             [
                 'config_key' => 'contact_email',
@@ -73,15 +73,24 @@ class WebsiteConfigSeeder extends Seeder
                 'sort_order' => 2,
             ],
             [
+                'config_key' => 'whatsapp_number',
+                'config_value' => '919265991201',
+                'config_type' => 'text',
+                'config_group' => 'contact',
+                'config_label' => 'WhatsApp Number',
+                'config_placeholder' => 'Enter WhatsApp number with country code',
+                'sort_order' => 3,
+            ],
+            [
                 'config_key' => 'contact_address',
                 'config_value' => '123, Business Park, Mumbai, India',
                 'config_type' => 'textarea',
                 'config_group' => 'contact',
                 'config_label' => 'Address',
                 'config_placeholder' => 'Enter address',
-                'sort_order' => 3,
+                'sort_order' => 4,
             ],
-            
+
             // Social Settings
             [
                 'config_key' => 'social_facebook',
@@ -128,7 +137,7 @@ class WebsiteConfigSeeder extends Seeder
                 'config_placeholder' => 'Enter YouTube URL',
                 'sort_order' => 5,
             ],
-            
+
             // SEO Settings
             [
                 'config_key' => 'seo_meta_title',
@@ -157,7 +166,7 @@ class WebsiteConfigSeeder extends Seeder
                 'config_help' => 'Recommended size: 1200x630 pixels',
                 'sort_order' => 3,
             ],
-            
+
             // Footer Settings
             [
                 'config_key' => 'footer_text',

@@ -15,9 +15,9 @@
 
     @include('frontend.sections.services-list')
 
-    @include('frontend.sections.infobar')
+    @include('frontend.sections.home.infobar')
 
-    @include('frontend.sections.why-choose')
+    @include('frontend.sections.home.why-choose')
 @endsection
 
 @push('scripts')

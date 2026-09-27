@@ -6,14 +6,6 @@
     {{-- Hero --}}
     @include('frontend.sections.home.hero')
 
-    {{-- About --}}
-    @include('frontend.sections.home.about')
-
-    {{-- Categories Strip --}}
-    @if(isset($homeCategories) && $homeCategories->count() > 0)
-        @include('frontend.sections.home.categories')
-    @endif
-
     {{-- Brands Strip --}}
     @if(isset($homeBrands) && $homeBrands->count() > 0)
         @include('frontend.sections.home.brands')
@@ -22,6 +14,14 @@
     {{-- Trending Products --}}
     @if(isset($trendingProducts) && $trendingProducts->count() > 0)
         @include('frontend.sections.home.trending-products', ['products' => $trendingProducts])
+    @endif
+
+    {{-- About --}}
+    {{-- @include('frontend.sections.home.about') --}}
+
+    {{-- Categories Strip --}}
+    @if(isset($homeCategories) && $homeCategories->count() > 0)
+        @include('frontend.sections.home.categories')
     @endif
 
     {{-- Featured Products Carousel --}}
@@ -39,8 +39,11 @@
     {{-- Process --}}
     @include('frontend.sections.home.process')
 
+    {{-- Counter --}}
+    @include('frontend.sections.home.counter')
+
     {{-- Video --}}
-    @include('frontend.sections.home.video')
+    {{-- @include('frontend.sections.home.video') --}}
 
     {{-- Skills --}}
     @include('frontend.sections.home.skills')
@@ -51,14 +54,11 @@
     {{-- Why Choose --}}
     @include('frontend.sections.home.why-choose')
 
-    {{-- Counter --}}
-    @include('frontend.sections.home.counter')
-
     {{-- Calculator --}}
-    @include('frontend.sections.home.calculator')
+    {{-- @include('frontend.sections.home.calculator') --}}
 
     {{-- Latest News --}}
-    @include('frontend.sections.home.latest-news')
+    {{-- @include('frontend.sections.home.latest-news') --}}
 @endsection
 
 @push('scripts')
