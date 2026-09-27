@@ -6,7 +6,7 @@
             <div class="container">
                 <!-- Logo -->
                 <a class="navbar-brand" href="#">
-                    <img src="{{ asset('frontend/images/logo.svg') }}" alt="Logo">
+                    <img style="height: 55px;" src="{{ configImage('web_logo') }}" alt="{{ configSetting('web_name') }}">
                 </a>
 
                 <!-- Main Menu -->

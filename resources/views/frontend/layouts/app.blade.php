@@ -17,8 +17,7 @@
     <title>@yield('title', 'Solor - Solar & Renewable Energy')</title>
 
     <!-- Favicon Icon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('frontend/images/favicon.png') }}">
-
+    <link rel="shortcut icon" type="image/x-icon" href="{{ configImage('web_favicon') }}">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

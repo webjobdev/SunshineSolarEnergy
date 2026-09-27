@@ -14,8 +14,8 @@
     ])
 
     @include('frontend.sections.contact-information')
-
     @include('frontend.sections.contact-whatsapp-cta')
+    @include('frontend.sections.contact-map')
 @endsection
 
 @push('scripts')
