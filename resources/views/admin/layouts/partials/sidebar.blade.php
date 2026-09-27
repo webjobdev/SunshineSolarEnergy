@@ -106,7 +106,7 @@
                 <i class="bi bi-journal-text"></i>
             </span>
             <span class="nav-text">Blog</span>
-        </a> --}}
+        </a>
         <!-- Blog with Submenu -->
         <div class="nav-item nav-dropdown {{ request()->routeIs('admin.blog*') ? 'open' : '' }}">
             <a class="nav-link nav-dropdown-toggle {{ request()->routeIs('admin.blog*') ? 'active' : '' }}"
@@ -168,7 +168,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Website Configuration with Submenu -->
         <div class="nav-item nav-dropdown {{ request()->routeIs('admin.config*') ? 'open' : '' }}">

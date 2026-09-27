@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Blog;
-use App\Models\Admin\BlogCategory;
-use App\Models\Admin\BlogComment;
-use App\Models\Admin\BlogTag;
+use App\Models\Admin\CustomerReview;
 use App\Models\Admin\Page;
+use App\Models\Admin\Product;
+use App\Models\Admin\ProductBrand;
+use App\Models\Admin\ProductCategory;
+use App\Models\Admin\Service;
 use App\Models\Admin\WebsiteConfiguration;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -18,72 +19,88 @@ class DashboardController extends Controller
      * Display the admin dashboard.
      *
      * @method GET
-     * @url admin/dashboard
-     * @name admin.dashboard
      *
-     * @return View|array
+     * @url admin/dashboard
+     *
+     * @name admin.dashboard
      */
     public function index(): View|array
     {
         try {
-            // Blog Statistics
-            $totalBlogs = Blog::count();
-            $publishedBlogs = Blog::where('status', 'published')->count();
-            $draftBlogs = Blog::where('status', 'draft')->count();
+            // ============================
+            // Product Statistics
+            // ============================
+            $totalProducts = Product::count();
+            $activeProducts = Product::where('status', 'active')->count();
+            $inactiveProducts = Product::where('status', 'inactive')->count();
+            $trendingProducts = Product::where('trending', 'active')->count();
+            $newProductsCount = Product::where('new', 'active')->count();
+            $homepageProducts = Product::where('show_on_home_page', 'active')->count();
 
-            // Page Statistics
+            // ============================
+            // Brands & Categories
+            // ============================
+            $totalBrands = ProductBrand::count();
+            $activeBrands = ProductBrand::where('status', 'active')->count();
+            $totalCategories = ProductCategory::count();
+            $activeCategories = ProductCategory::where('status', 'active')->count();
+
+            // ============================
+            // Services
+            // ============================
+            $totalServices = Service::count();
+            $activeServices = Service::where('status', 'active')->count();
+
+            // ============================
+            // Customer Reviews
+            // ============================
+            $totalReviews = CustomerReview::count();
+            $activeReviews = CustomerReview::where('status', 'active')->count();
+
+            // ============================
+            // Pages
+            // ============================
             $totalPages = Page::count();
             $activePages = Page::where('status', 'active')->count();
             $inactivePages = Page::where('status', 'inactive')->count();
 
-            // Comment Statistics
-            $totalComments = BlogComment::count();
-            $approvedComments = BlogComment::where('status', 'approved')->count();
-            $pendingComments = BlogComment::where('status', 'pending')->count();
-
-            // Category & Tag Statistics
-            $totalCategories = BlogCategory::count();
-            $activeCategories = BlogCategory::where('status', 'active')->count();
-            $totalTags = BlogTag::count();
-            $activeTags = BlogTag::where('status', 'active')->count();
-
+            // ============================
             // Social Media Count
-            $socialConfigs = WebsiteConfiguration::where('config_group', 'social')
+            // ============================
+            $socialCount = WebsiteConfiguration::where('config_group', 'social')
                 ->where('config_type', 'url')
                 ->whereNotNull('config_value')
                 ->where('config_value', '!=', '')
                 ->count();
-            $socialCount = $socialConfigs;
 
-            // Recent Blog Posts
-            $recentBlogs = Blog::with(['category', 'createdBy'])
-                ->latest()
-                ->take(5)
-                ->get();
-
-            // Recent Comments
-            $recentComments = BlogComment::with(['blog', 'user'])
+            // ============================
+            // Recent Products
+            // ============================
+            $recentProducts = Product::with(['brand', 'category'])
                 ->latest()
                 ->take(5)
                 ->get();
 
             return view('admin.pages.dashboard.dashboard', compact(
-                'totalBlogs',
-                'publishedBlogs',
-                'draftBlogs',
+                'totalProducts',
+                'activeProducts',
+                'inactiveProducts',
+                'trendingProducts',
+                'newProductsCount',
+                'homepageProducts',
+                'totalBrands',
+                'activeBrands',
+                'totalCategories',
+                'activeCategories',
+                'totalServices',
+                'activeServices',
+                'totalReviews',
+                'activeReviews',
                 'totalPages',
                 'activePages',
                 'inactivePages',
-                'totalComments',
-                'approvedComments',
-                'pendingComments',
-                'totalCategories',
-                'activeCategories',
-                'totalTags',
-                'activeTags',
                 'socialCount',
-                'recentBlogs',
-                'recentComments'
+                'recentProducts'
             ));
         } catch (Exception $exception) {
             return errorResponse($exception->getMessage());
