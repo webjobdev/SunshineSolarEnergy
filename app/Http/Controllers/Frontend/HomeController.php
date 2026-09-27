@@ -26,19 +26,86 @@ class HomeController extends Controller
      *
      * @url /
      */
+     /**
+     * Show the home page view.
+     *
+     * @method GET
+     *
+     * @url /
+     */
     public function index(): View
     {
-        $pages = Page::where('status', 'active')
-            ->select('id', 'page_name', 'slug', 'meta_title', 'meta_description', 'status')
-            ->get();
+        try {
+            $pages = Page::where('status', 'active')
+                ->select('id', 'page_name', 'slug', 'meta_title', 'meta_description', 'status')
+                ->get();
 
-        $homePage = Page::where('slug', 'home')
-            ->where('status', 'active')
-            ->first();
+            $homePage = Page::where('slug', 'home')
+                ->where('status', 'active')
+                ->first();
 
-        return view('frontend.home', compact('pages', 'homePage'));
+            // Featured products for home page
+            $homeProducts = Product::with(['brand', 'category'])
+                ->where('status', 'active')
+                ->where('show_on_home_page', 'active')
+                ->orderBy('sort_order')
+                ->limit(12)
+                ->get();
+
+            // Fallback: if no "show_on_home_page" products, use latest 12
+            if ($homeProducts->isEmpty()) {
+                $homeProducts = Product::with(['brand', 'category'])
+                    ->where('status', 'active')
+                    ->orderBy('id', 'desc')
+                    ->limit(12)
+                    ->get();
+            }
+
+            // New products
+            $newProducts = Product::with(['brand', 'category'])
+                ->where('status', 'active')
+                ->where('new', 'active')
+                ->orderBy('id', 'desc')
+                ->limit(8)
+                ->get();
+
+            // Trending products
+            $trendingProducts = Product::with(['brand', 'category'])
+                ->where('status', 'active')
+                ->where('trending', 'active')
+                ->orderBy('sort_order')
+                ->limit(8)
+                ->get();
+
+            // Home categories (with counts)
+            $homeCategories = ProductCategory::where('status', 'active')
+                ->withCount(['products' => function ($query) {
+                    $query->where('status', 'active');
+                }])
+                ->orderBy('sort_order')
+                ->get();
+
+            // Home brands (with counts)
+            $homeBrands = ProductBrand::where('status', 'active')
+                ->withCount(['products' => function ($query) {
+                    $query->where('status', 'active');
+                }])
+                ->orderBy('sort_order')
+                ->get();
+
+            return view('frontend.home', compact(
+                'pages',
+                'homePage',
+                'homeProducts',
+                'newProducts',
+                'trendingProducts',
+                'homeCategories',
+                'homeBrands'
+            ));
+        } catch (Exception $exception) {
+            abort(500, $exception->getMessage());
+        }
     }
-
     /**
      * Show the about page view.
      *
