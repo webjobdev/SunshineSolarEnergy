@@ -418,7 +418,7 @@ class HomeController extends Controller
             ->get();
     }
 
-    /**
+ /**
      * Show contact page.
      *
      * @method GET
@@ -427,61 +427,13 @@ class HomeController extends Controller
      */
     public function contact(): View
     {
-        $pages = Page::where('status', 'active')->get();
-        $contactPage = Page::where('slug', 'contact')->where('status', 'active')->first();
-
-        $contactData = [
-            'subtitle' => 'Contact Details',
-            'title' => 'Happy to Answer All Your Questions',
-            'form_subtitle' => 'Contact Now',
-            'form_title' => 'Get In Touch With Us',
-            'map_embed' => '<iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d56481.31329163797!2d-82.30112043759952!3d27.776444959332093!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sUnited%20States%20solar!5e0!3m2!1sen!2sin!4v1706008331370!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>',
-            'items' => [
-                ['title' => 'Our Addresses:', 'details' => '123, Lorem Ipsum, City, Country', 'icon' => 'icon-location.svg', 'image' => 'location-img.jpg', 'delay' => '0.25s'],
-                ['title' => 'Emails:', 'details' => 'info@domainname.com', 'icon' => 'icon-mail.svg', 'image' => 'email-img.jpg', 'delay' => '0.5s'],
-                ['title' => 'Phones:', 'details' => '(+0) 123 456 789', 'icon' => 'icon-phone.svg', 'image' => 'phone-img.jpg', 'delay' => '0.75s'],
-                ['title' => 'Follow Us:', 'details' => 'social', 'icon' => 'icon-follow.svg', 'image' => 'follow-img.jpg', 'delay' => '1.0s'],
-            ],
-        ];
-
-        return view('frontend.contact', compact('pages', 'contactPage', 'contactData'));
-    }
-
-    /**
-     * Submit contact form.
-     *
-     * @method POST
-     *
-     * @url /contact/submit
-     */
-    public function submitContact(Request $request): JsonResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
         try {
-            return response()->json([
-                'status' => true,
-                'message' => 'Thank you for contacting us. We will get back to you soon!',
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Unable to send message. Please try again later.',
-            ], 500);
+            $pages = Page::where('status', 'active')->get();
+            $contactPage = Page::where('slug', 'contact')->where('status', 'active')->first();
+
+            return view('frontend.contact', compact('pages', 'contactPage'));
+        } catch (Exception $exception) {
+            abort(500, $exception->getMessage());
         }
     }
 

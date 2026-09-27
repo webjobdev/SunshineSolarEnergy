@@ -176,7 +176,6 @@ Route::get('/products/filter', [HomeController::class, 'productsFilter'])->name(
 Route::get('/products', [HomeController::class, 'products'])->name('products');
 Route::get('/product/{slug}', [HomeController::class, 'productSingle'])->name('product.single');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
-Route::post('/contact/submit', [HomeController::class, 'submitContact'])->name('contact.submit');
 
 Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('legal.privacy');
 Route::get('/terms-conditions', [HomeController::class, 'termsConditions'])->name('legal.terms');
