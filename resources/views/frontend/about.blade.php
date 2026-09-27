@@ -13,31 +13,34 @@
         ]
     ])
 
+    @include('frontend.sections.home.counter')
+
     @include('frontend.sections.about-details', ['about' => $about])
 
-    @include('frontend.sections.why-choose')
+    @include('frontend.sections.home.skills')
 
-    @include('frontend.sections.process')
+    @include('frontend.sections.home.why-choose')
 
-    @include('frontend.sections.infobar')
+    @include('frontend.sections.home.process')
 
-    @include('frontend.sections.latest-projects')
+    @include('frontend.sections.home.infobar')
+    
 
-    @include('frontend.sections.counter')
+    {{-- @include('frontend.sections.home.latest-projects') --}}
 
-    @include('frontend.sections.testimonials')
+    {{-- @include('frontend.sections.home.testimonials') --}}
 
-    @include('frontend.sections.team')
+    {{-- @include('frontend.sections.home.team') --}}
 @endsection
 
 @push('scripts')
 <script>
-    if (typeof WOW !== 'undefined') new WOW().init();
+    // if (typeof WOW !== 'undefined') new WOW().init();
 
-    $(document).ready(function () {
-        if ($.fn.counterUp) {
-            $('.counter').counterUp({ delay: 10, time: 1000 });
-        }
-    });
+    // $(document).ready(function () {
+    //     if ($.fn.counterUp) {
+    //         $('.counter').counterUp({ delay: 10, time: 1000 });
+    //     }
+    // });
 </script>
 @endpush

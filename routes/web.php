@@ -182,7 +182,6 @@ Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('l
 Route::get('/terms-conditions', [HomeController::class, 'termsConditions'])->name('legal.terms');
 Route::get('/disclaimer', [HomeController::class, 'disclaimer'])->name('legal.disclaimer');
 Route::get('/refund-cancellation-policy', [HomeController::class, 'refundPolicy'])->name('legal.refund');
-Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
 
 // Route::get('/home-video', [HomeController::class, 'video'])->name('home.video');
 // Route::get('/home-slider', [HomeController::class, 'slider'])->name('home.slider');

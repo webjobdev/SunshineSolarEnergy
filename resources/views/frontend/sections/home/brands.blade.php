@@ -11,11 +11,14 @@
                 <a href="{{ route('products', ['brands' => [$brand->id]]) }}"
                    class="brand-card wow fadeInUp"
                    data-wow-delay="{{ $loop->iteration * 0.05 }}s"
-                   title="{{ $brand->name }}">
+                   title="{{ $brand->name }}"
+                   aria-label="{{ $brand->name }}">
 
                     <div class="brand-image">
                         @if($brand->image_url)
-                            <img src="{{ $brand->image_url }}" alt="{{ $brand->name }}" loading="lazy">
+                            <img src="{{ $brand->image_url }}"
+                                 alt="{{ $brand->name }}"
+                                 loading="lazy">
                         @else
                             <div class="brand-placeholder">
                                 <i class="fa-solid fa-award"></i>
@@ -23,12 +26,6 @@
                         @endif
                     </div>
 
-                    <div class="brand-info">
-                        <h4>{{ $brand->name }}</h4>
-                        <span>{{ $brand->products_count }}
-                            {{ Str::plural('Product', $brand->products_count) }}
-                        </span>
-                    </div>
                 </a>
             @endforeach
         </div>
@@ -38,6 +35,9 @@
 
 @push('styles')
 <style>
+/* =========================================================
+   HOME BRANDS
+   ========================================================= */
 .home-brands {
     padding: 60px 0;
     background: #fff;
@@ -64,56 +64,68 @@
     letter-spacing: -0.5px;
 }
 
+/* =========================================================
+   GRID
+   ========================================================= */
 .brands-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
 }
 
+/* =========================================================
+   BRAND CARD — logo only
+   ========================================================= */
 .brand-card {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px 16px;
+    padding: 20px;
     background: #fff;
     border: 1.5px solid #f1f1f1;
-    border-radius: 14px;
+    border-radius: 16px;
     text-decoration: none;
-    transition: all 0.25s ease;
-    text-align: center;
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                border-color 0.25s ease,
+                background 0.25s ease;
+    height: 160px;                     /* fixed square-ish card */
+    overflow: hidden;
 }
 
 .brand-card:hover {
     border-color: #d6efde;
-    transform: translateY(-4px);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+    background: #fafffb;
 }
 
+/* Image container — holds the full logo */
 .brand-card .brand-image {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: #f8f9fa;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 14px;
     overflow: hidden;
-    transition: background 0.2s;
 }
 
-.brand-card:hover .brand-image {
-    background: #f0fdf4;
-}
-
+/* FULL logo — no crop, no padding trimming */
 .brand-card .brand-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 10px;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;               /* full logo visible */
+    display: block;
+    transition: transform 0.35s ease;
 }
 
+.brand-card:hover .brand-image img {
+    transform: scale(1.06);
+}
+
+/* Fallback placeholder */
 .brand-card .brand-placeholder {
     width: 100%;
     height: 100%;
@@ -121,51 +133,55 @@
     align-items: center;
     justify-content: center;
     color: #28a745;
-    font-size: 32px;
-    opacity: 0.6;
+    font-size: 42px;
+    opacity: 0.55;
 }
 
-.brand-card .brand-info h4 {
-    font-size: 15px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 4px;
-    transition: color 0.2s;
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 991px) {
+    .home-brands {
+        padding: 50px 0;
+    }
+
+    .home-brands .section-title h2 {
+        font-size: 26px;
+    }
+
+    .brands-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
+    }
+
+    .brand-card {
+        height: 140px;
+        padding: 16px;
+    }
 }
 
-.brand-card:hover .brand-info h4 {
-    color: #28a745;
-}
-
-.brand-card .brand-info span {
-    font-size: 12px;
-    color: #999;
-}
-
-@media (max-width: 767px) {
+@media (max-width: 575px) {
     .home-brands {
         padding: 40px 0;
     }
+
     .home-brands .section-title h2 {
-        font-size: 24px;
+        font-size: 22px;
     }
+
     .brands-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         gap: 12px;
     }
+
     .brand-card {
-        padding: 18px 12px;
+        height: 110px;
+        padding: 12px;
+        border-radius: 12px;
     }
-    .brand-card .brand-image {
-        width: 70px;
-        height: 70px;
-        margin-bottom: 10px;
-    }
-    .brand-card .brand-info h4 {
-        font-size: 13px;
-    }
-    .brand-card .brand-info span {
-        font-size: 11px;
+
+    .brand-card .brand-placeholder {
+        font-size: 32px;
     }
 }
 </style>

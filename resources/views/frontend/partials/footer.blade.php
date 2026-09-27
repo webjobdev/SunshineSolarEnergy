@@ -225,14 +225,14 @@
                                     <li><a href="{{ route('legal.terms') }}">Term & Conditions</a></li>
                                     <li><a href="{{ route('legal.disclaimer') }}">Disclaimer</a></li>
                                     <li><a href="{{ route('legal.refund') }}">Refund & Cancellation</a></li>
-                                    <li><a href="{{ route('faq') }}">Support & FAQs</a></li>
+                                    <li><a href="{{ route('contact') }}">Support</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Copyright -->
+                {{-- <!-- Copyright --> --}}
                 {{-- <div class="footer-copyright">
                     <div class="row">
                         <div class="col-md-12">

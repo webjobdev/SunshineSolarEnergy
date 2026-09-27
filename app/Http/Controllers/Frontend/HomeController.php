@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\CustomerReview;
 use App\Models\Admin\LegalPage;
 use App\Models\Admin\Page;
 use App\Models\Admin\Product;
@@ -33,6 +34,13 @@ class HomeController extends Controller
      *
      * @url /
      */
+        /**
+     * Show the home page view.
+     *
+     * @method GET
+     *
+     * @url /
+     */
     public function index(): View
     {
         try {
@@ -52,7 +60,6 @@ class HomeController extends Controller
                 ->limit(12)
                 ->get();
 
-            // Fallback: if no "show_on_home_page" products, use latest 12
             if ($homeProducts->isEmpty()) {
                 $homeProducts = Product::with(['brand', 'category'])
                     ->where('status', 'active')
@@ -77,7 +84,7 @@ class HomeController extends Controller
                 ->limit(8)
                 ->get();
 
-            // Home categories (with counts)
+            // Home categories
             $homeCategories = ProductCategory::where('status', 'active')
                 ->withCount(['products' => function ($query) {
                     $query->where('status', 'active');
@@ -85,12 +92,26 @@ class HomeController extends Controller
                 ->orderBy('sort_order')
                 ->get();
 
-            // Home brands (with counts)
+            // Home brands
             $homeBrands = ProductBrand::where('status', 'active')
                 ->withCount(['products' => function ($query) {
                     $query->where('status', 'active');
                 }])
                 ->orderBy('sort_order')
+                ->get();
+
+            //  Home services
+            $homeServices = Service::active()
+                ->orderBy('sort_order')
+                ->orderBy('id', 'desc')
+                ->limit(6)
+                ->get();
+
+            //  Customer reviews (testimonials)
+            $testimonials = CustomerReview::active()
+                ->orderBy('sort_order')
+                ->orderBy('id', 'desc')
+                ->limit(6)
                 ->get();
 
             return view('frontend.home', compact(
@@ -100,7 +121,9 @@ class HomeController extends Controller
                 'newProducts',
                 'trendingProducts',
                 'homeCategories',
-                'homeBrands'
+                'homeBrands',
+                'homeServices',
+                'testimonials'
             ));
         } catch (Exception $exception) {
             abort(500, $exception->getMessage());
@@ -536,40 +559,5 @@ class HomeController extends Controller
         }
 
         return view('frontend.legal', compact('pages', 'legalPage', 'pageType', 'title'));
-    }
-
-    /**
-     * Show FAQ page.
-     *
-     * @method GET
-     *
-     * @url /faq
-     */
-    public function faq(): View
-    {
-        $pages = Page::where('status', 'active')->get();
-        $faqPage = Page::where('slug', 'faq')->where('status', 'active')->first();
-
-        $faqCategories = [
-            ['slug' => 'general', 'name' => 'General'],
-            ['slug' => 'installation', 'name' => 'Installation'],
-            ['slug' => 'maintenance', 'name' => 'Maintenance'],
-            ['slug' => 'savings', 'name' => 'Savings & Benefits'],
-        ];
-
-        $faqData = [
-            'subtitle' => 'Frequently Asked Questions',
-            'title' => 'Find Answers to Your Questions',
-            'description' => 'Browse our most commonly asked questions.',
-            'items' => [
-                ['id' => 1, 'question' => 'Understanding Renewable Energy?', 'answer' => 'Elit duis tristique sollicitudin nibh.', 'category' => 'general', 'active' => true],
-                ['id' => 2, 'question' => 'The Basics of Tidal and Wave Energy?', 'answer' => 'Elit duis tristique sollicitudin nibh.', 'category' => 'general', 'active' => false],
-                ['id' => 3, 'question' => 'Educating for a Sustainable Future?', 'answer' => 'Elit duis tristique sollicitudin nibh.', 'category' => 'installation', 'active' => false],
-                ['id' => 4, 'question' => 'Staying Informed: Resources?', 'answer' => 'Elit duis tristique sollicitudin nibh.', 'category' => 'maintenance', 'active' => false],
-                ['id' => 5, 'question' => 'How Much Can I Save?', 'answer' => 'Elit duis tristique sollicitudin nibh.', 'category' => 'savings', 'active' => false],
-            ],
-        ];
-
-        return view('frontend.faq', compact('pages', 'faqPage', 'faqData', 'faqCategories'));
     }
 }
